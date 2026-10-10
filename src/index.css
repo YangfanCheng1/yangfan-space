@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/*
+ * Gateway design tokens (Ink & Frame). Apps under src/apps/* are free to
+ * ignore these and bring their own look — nothing here styles them globally.
+ */
+@theme {
+  --color-ink: #1e1e24;
+  --color-paper: #f8f6f0;
+  --color-vermilion: #e05a47;
+  --color-teal: #2a525a;
+  --color-mustard: #e2a03f;
+
+  --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);
+  --shadow-pop: 4px 4px 0 0 var(--color-ink);
+  --shadow-pop-lg: 6px 6px 0 0 var(--color-ink);
+
+  --font-display: "Archivo Black", "Arial Black", system-ui, sans-serif;
+  --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+@utility ink-border {
+  border: 2.5px solid var(--color-ink);
+}
+
+/* Halftone dot field. Tint with --halftone (any color), size with --halftone-size. */
+@utility halftone {
+  background-image: radial-gradient(
+    var(--halftone, rgb(30 30 36 / 0.16)) 1.1px,
+    transparent 1.5px
+  );
+  background-size: var(--halftone-size, 9px) var(--halftone-size, 9px);
+}
+
+/* Press-able surface: lifts on hover, slams flat on press. */
+@utility pressable {
+  transition:
+    transform 90ms ease-out,
+    box-shadow 90ms ease-out;
+  &:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow-pop-lg);
+  }
+  &:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-mustard);
+    outline-offset: 2px;
+  }
+}
+
+/* Range slider skin used by components/ui/Slider */
+.ink-slider {
+  appearance: none;
+  height: 10px;
+  background: var(--color-paper);
+  border: 2.5px solid var(--color-ink);
+  cursor: pointer;
+}
+.ink-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--slider-accent, var(--color-vermilion));
+  border: 2.5px solid var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+.ink-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  background: var(--slider-accent, var(--color-vermilion));
+  border: 2.5px solid var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+/* Native <dialog> backdrop for components/ui/Modal */
+dialog.ink-modal::backdrop {
+  background: rgb(30 30 36 / 0.55);
+}
