@@ -1,0 +1,24 @@
+/*
+ * Personal Finance theme. Redefining the gateway's ink/paper/shadow tokens on
+ * .pf-root turns the shared utilities (ink-border, shadow-pop, pressable,
+ * halftone, text-ink, bg-paper…) green inside this app only.
+ * The pf-* colors themselves live in src/index.css @theme.
+ */
+.pf-root {
+  --color-ink: #14231c;
+  --color-paper: #f2f6ec;
+  --shadow-pop-sm: 3px 3px 0 0 #14231c;
+  --shadow-pop: 4px 4px 0 0 #14231c;
+  --shadow-pop-lg: 6px 6px 0 0 #14231c;
+  --halftone: rgb(20 35 28 / 0.13);
+}
+
+.pf-root dialog::backdrop {
+  background: rgb(20 35 28 / 0.55);
+}
+
+/* Tabular figures for anything numeric. */
+.pf-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

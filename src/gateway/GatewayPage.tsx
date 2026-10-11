@@ -20,9 +20,9 @@ export function GatewayPage() {
           <span className="ink-border bg-ink px-3 py-1.5 font-display text-lg tracking-wide text-paper uppercase sm:text-xl">
             Ink <span className="text-mustard">&amp;</span> Frame
           </span>
-          <Badge tone="mustard" className="hidden sm:inline-block">
-            ComixLab
-          </Badge>
+          <span className="hidden sm:inline">
+            <Badge tone="mustard">ComixLab</Badge>
+          </span>
         </a>
         <Button variant="ghost" size="sm" onClick={toggleSound} aria-pressed={soundOn} sound={!soundOn}>
           SFX: {soundOn ? 'On' : 'Off'}

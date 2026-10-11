@@ -11,6 +11,13 @@
   --color-teal: #2a525a;
   --color-mustard: #e2a03f;
 
+  /* Personal Finance app (src/apps/personal-finance) — green palette */
+  --color-pf-green: #2e8b57;
+  --color-pf-pine: #1d4a38;
+  --color-pf-lime: #b9d96a;
+  --color-pf-gold: #e0b04a;
+  --color-pf-clay: #d4643f;
+
   --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);
   --shadow-pop: 4px 4px 0 0 var(--color-ink);
   --shadow-pop-lg: 6px 6px 0 0 var(--color-ink);
