@@ -201,7 +201,7 @@ export function ProjectionChart({ result, params }: { result: FireResult; params
         {showTable ? 'Hide table' : 'Show table'}
       </button>
       {showTable && (
-        <div id={tableId} className="mt-3 max-h-80 overflow-auto border-2 border-ink">
+        <div id={tableId} className="relative mt-3 max-h-80 overflow-auto border-2 border-ink">
           <table className="w-full text-sm">
             <caption className="sr-only">Portfolio projection by year</caption>
             <thead className="sticky top-0 bg-pf-lime font-mono text-xs uppercase">

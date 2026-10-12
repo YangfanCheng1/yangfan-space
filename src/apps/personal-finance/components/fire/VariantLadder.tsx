@@ -16,7 +16,7 @@ export function VariantLadder({ result, params }: { result: FireResult; params: 
     <Card className="p-5">
       <h2 className="font-display text-xl uppercase">FIRE ladder</h2>
       <p className="mt-1 text-sm">Same withdrawal rate, different lifestyles.</p>
-      <div className="mt-4 overflow-x-auto">
+      <div className="relative mt-4 overflow-x-auto">
         <table className="w-full min-w-[34rem] text-sm">
           <thead className="font-mono text-xs uppercase">
             <tr className="border-b-2 border-ink">

@@ -27,7 +27,7 @@ export function SensitivityGrid({ result, params }: { result: FireResult; params
         Years to FI for different returns and savings. Darker = sooner; — = not by age 90.
         {userRow === -1 && ` Your ${formatPct(params.realReturn)} return falls between rows.`}
       </p>
-      <div className="mt-4 overflow-x-auto">
+      <div className="relative mt-4 overflow-x-auto">
         <table className="w-full min-w-[30rem] border-separate border-spacing-1 text-sm">
           <caption className="sr-only">Years to FI by real return (rows) and annual contribution (columns)</caption>
           <thead>

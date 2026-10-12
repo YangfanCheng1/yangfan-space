@@ -35,7 +35,7 @@ export function Nav() {
         </div>
       </div>
 
-      <nav aria-label="Personal Finance" className="-mx-4 mt-5 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0">
+      <nav aria-label="Personal Finance" className="relative -mx-4 mt-5 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0">
         <ul className="flex min-w-max gap-3">
           {links.map((l) => (
             <li key={l.to}>
