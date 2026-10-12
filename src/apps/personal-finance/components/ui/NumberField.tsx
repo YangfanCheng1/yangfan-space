@@ -33,7 +33,8 @@ function parse(kind: NumberFieldKind, text: string): number | null {
 
 function display(kind: NumberFieldKind, value: number | undefined): string {
   if (value === undefined || !Number.isFinite(value)) return ''
-  if (kind === 'money') return (value / 100).toLocaleString('en-US', { maximumFractionDigits: 2 })
+  if (kind === 'money')
+    return (value / 100).toLocaleString('en-US', { minimumFractionDigits: value % 100 === 0 ? 0 : 2, maximumFractionDigits: 2 })
   return String(value)
 }
 

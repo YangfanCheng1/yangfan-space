@@ -126,11 +126,16 @@ The primary user is someone curious about their finances and comfortable enterin
   - debt-to-asset (%)
   - home equity: real estate − mortgage, shown only if either exists
 - **NW8.** Breakdown chart: horizontal bars of assets by category and liabilities by category, using one axis scale so the two are comparable. It has a table fallback.
+  - Assets ("What you own") and liabilities ("What you owe") are separate labeled panels, not one color-coded set. Green against clay fails the colorblind check (protan ΔE 3.9), so color must not be the only cue.
+  - Values sit at the bar tips, and on phones each label goes on its own line above the bar.
 
 **Snapshots & history**
 - **NW9.** **Save snapshot** records today's date, total assets, total liabilities, per-category totals, invested and liquid totals, and an optional note. Saving again on the same date replaces that date's snapshot after asking for confirmation.
 - **NW10.** Change since the last snapshot is shown as an absolute amount and a %. Colors use green for up and clay for down, plus a ▲ / ▼ glyph so color isn't the only signal.
 - **NW11.** History chart: a net worth line over snapshot dates, with toggles for assets and liabilities lines. It needs at least two snapshots and otherwise shows a hint. The tooltip shows date, values and note.
+  - The y-axis fits the data's range rather than starting at $0, so a line shows the trend. Bars keep a zero baseline.
+  - Line colors, validated in this order: net worth green, assets blue `#3a6fb0`, liabilities clay.
+  - The snapshot list (NW12) doubles as the chart's table view.
 - **NW12.** Snapshot list: date, net worth, change vs. the previous snapshot, note, and delete with confirmation.
 
 ### 5.3 FIRE Projection (`/fire`)

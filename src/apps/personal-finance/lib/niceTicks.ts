@@ -17,3 +17,37 @@ export function niceTicks(max: number): number[] {
   const { step, n } = best ?? { step: mag, n: Math.ceil(max / mag) }
   return Array.from({ length: n + 1 }, (_, i) => Math.round(i * step * 1e6) / 1e6)
 }
+
+/**
+ * Ticks fitted to the data's own range (no forced zero) — for line charts, where
+ * the trend matters more than distance from zero. Bars must keep a zero baseline.
+ */
+export function niceSpanTicks(min: number, max: number): number[] {
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return [0, 1]
+  if (max - min < 1e-9) {
+    const pad = Math.max(Math.abs(max) * 0.1, 1_000)
+    return niceSpanTicks(min - pad, max + pad)
+  }
+  const step = niceTicks(max - min)[1]
+  const start = Math.floor(min / step + 1e-9) * step
+  const end = Math.ceil(max / step - 1e-9) * step
+  const ticks: number[] = []
+  for (let v = start; v <= end + step / 2; v += step) ticks.push(Math.round(v * 1e6) / 1e6 || 0)
+  return ticks
+}
+
+/**
+ * Like niceTicks, but for data that can dip below zero (e.g. negative net worth).
+ * Always includes 0; the step comes from the full span.
+ */
+export function niceRangeTicks(min: number, max: number): number[] {
+  const lo = Math.min(0, min)
+  const hi = Math.max(0, max)
+  if (lo === 0) return niceTicks(hi)
+  const step = niceTicks(hi - lo)[1]
+  const start = Math.floor(lo / step - 1e-9) * step
+  const end = Math.ceil(hi / step - 1e-9) * step
+  const ticks: number[] = []
+  for (let v = start; v <= end + step / 2; v += step) ticks.push(Math.round(v * 1e6) / 1e6 || 0)
+  return ticks
+}

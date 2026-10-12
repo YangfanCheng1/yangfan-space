@@ -36,3 +36,28 @@ export function formatYears(n: number) {
   const s = formatOneDecimal(n)
   return `${s} ${s === '1' ? 'year' : 'years'}`
 }
+
+const dateLong = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+const monthShort = new Intl.DateTimeFormat('en-US', { month: 'short' })
+
+/** Parse YYYY-MM-DD as a local calendar date (not UTC midnight, which can shift the day). */
+export function parseISODate(iso: string): Date {
+  const [y, m, d] = iso.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
+/** "2026-09-01" → "Sep 1, 2026" */
+export const formatDate = (iso: string) => dateLong.format(parseISODate(iso))
+
+/** "2026-09-01" → "Sep ’26" (axis ticks; the apostrophe keeps it from reading as a day) */
+export function formatDateShort(iso: string) {
+  const d = parseISODate(iso)
+  return `${monthShort.format(d)} ’${String(d.getFullYear()).slice(2)}`
+}
+
+/** Signed USD with an arrow glyph so direction never relies on color: "▲ $1,200" / "▼ $300". */
+export function formatChange(dollars: number) {
+  if (!Number.isFinite(dollars)) return '—'
+  if (Math.round(dollars) === 0) return '± $0'
+  return `${dollars > 0 ? '▲' : '▼'} ${formatUSD(Math.abs(dollars))}`
+}

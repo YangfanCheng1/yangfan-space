@@ -22,3 +22,15 @@ export const SPEED_RAMP = ['#7fba8e', '#5ea474', '#367a4e', '#245f3b', '#163f27'
 export const SPEED_RAMP_TEXT = ['ink', 'ink', 'paper', 'paper', 'paper'] as const
 
 export const CHART_FONT = '"Space Mono", ui-monospace, monospace'
+
+/**
+ * Net Worth history lines (categorical, fixed order): net worth, assets, liabilities.
+ * Validated in this order: CVD ΔE ≥ 16.8, normal ΔE ≥ 18.3, all ≥ 3:1 → PASS.
+ * Green and clay must never be adjacent (protan ΔE 3.9), so the breakdown chart
+ * shows assets and liabilities as separate labeled panels instead of one colored set.
+ */
+export const HISTORY = {
+  netWorth: '#2e8b57',
+  assets: '#3a6fb0',
+  liabilities: '#d4643f',
+} as const

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { niceTicks } from './niceTicks'
+import { niceRangeTicks, niceSpanTicks, niceTicks } from './niceTicks'
 
 describe('niceTicks', () => {
   it('a $1.08M top → $200K steps to $1.2M (least overshoot)', () => {
@@ -21,4 +21,40 @@ describe('niceTicks', () => {
     expect(niceTicks(0)).toEqual([0, 1])
     expect(niceTicks(Number.NaN)).toEqual([0, 1])
   })
+})
+
+describe('niceRangeTicks', () => {
+  it('all-positive data matches niceTicks', () => expect(niceRangeTicks(200, 1_080_000)).toEqual(niceTicks(1_080_000)))
+  it('spans below zero and includes 0', () => {
+    const t = niceRangeTicks(-30_000, 90_000)
+    expect(t).toContain(0)
+    expect(t[0]).toBeLessThanOrEqual(-30_000)
+    expect(t.at(-1)!).toBeGreaterThanOrEqual(90_000)
+    const steps = t.slice(1).map((v, i) => v - t[i])
+    expect(new Set(steps).size).toBe(1)
+  })
+  it('all-negative data still reaches 0', () => {
+    const t = niceRangeTicks(-45_000, -10_000)
+    expect(t.at(-1)).toBe(0)
+    expect(t[0]).toBeLessThanOrEqual(-45_000)
+  })
+  it('no -0', () => expect(niceRangeTicks(-5, 5).some((v) => Object.is(v, -0))).toBe(false))
+})
+
+describe('niceSpanTicks', () => {
+  it('fits the data range instead of starting at zero', () => {
+    expect(niceSpanTicks(271_000, 304_500)).toEqual([270_000, 280_000, 290_000, 300_000, 310_000])
+  })
+  it('handles a range crossing zero', () => {
+    const t = niceSpanTicks(-12_000, 30_000)
+    expect(t[0]).toBeLessThanOrEqual(-12_000)
+    expect(t.at(-1)!).toBeGreaterThanOrEqual(30_000)
+    expect(t).toContain(0)
+  })
+  it('pads a flat series', () => {
+    const t = niceSpanTicks(50_000, 50_000)
+    expect(t[0]).toBeLessThan(50_000)
+    expect(t.at(-1)!).toBeGreaterThan(50_000)
+  })
+  it('degenerate input', () => expect(niceSpanTicks(Number.NaN, 1)).toEqual([0, 1]))
 })

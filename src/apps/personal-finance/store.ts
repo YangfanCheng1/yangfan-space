@@ -1,5 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { normalizeDraft } from './lib/accounts'
+import type { AccountDraft } from './lib/accounts'
+import { localISODate, snapshotFrom, summarize, upsertSnapshot } from './lib/calc/netWorth'
 import { DEFAULT_FIRE_INPUTS } from './lib/fireInputs'
 import type { FireInputs, PersonalFinanceData } from './types'
 
@@ -10,7 +13,19 @@ import type { FireInputs, PersonalFinanceData } from './types'
 interface Actions {
   setFire: (patch: Partial<FireInputs>) => void
   resetFire: () => void
+  /** Returns the new account's id. */
+  addAccount: (draft: AccountDraft) => string
+  updateAccount: (id: string, draft: AccountDraft) => void
+  deleteAccount: (id: string) => void
+  /** Snapshot today's totals (or `date`, YYYY-MM-DD); replaces a snapshot on the same date. */
+  saveSnapshot: (note?: string, date?: string) => void
+  deleteSnapshot: (date: string) => void
 }
+
+const newId = () =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 
 export type PersonalFinanceState = PersonalFinanceData & Actions
 
@@ -30,6 +45,24 @@ export const usePersonalFinance = create<PersonalFinanceState>()(
       ...initialData(),
       setFire: (patch) => set((s) => ({ fire: { ...s.fire, ...patch } })),
       resetFire: () => set({ fire: { ...DEFAULT_FIRE_INPUTS } }),
+
+      addAccount: (draft) => {
+        const id = newId()
+        const now = new Date().toISOString()
+        set((s) => ({ accounts: [...s.accounts, { ...normalizeDraft(draft), id, createdAt: now, updatedAt: now }] }))
+        return id
+      },
+      updateAccount: (id, draft) =>
+        set((s) => ({
+          accounts: s.accounts.map((a) =>
+            a.id === id ? { ...normalizeDraft(draft), id, createdAt: a.createdAt, updatedAt: new Date().toISOString() } : a,
+          ),
+        })),
+      deleteAccount: (id) => set((s) => ({ accounts: s.accounts.filter((a) => a.id !== id) })),
+
+      saveSnapshot: (note, date = localISODate()) =>
+        set((s) => ({ snapshots: upsertSnapshot(s.snapshots, snapshotFrom(summarize(s.accounts), date, note)) })),
+      deleteSnapshot: (date) => set((s) => ({ snapshots: s.snapshots.filter((x) => x.date !== date) })),
     }),
     {
       name: STORAGE_KEY,
