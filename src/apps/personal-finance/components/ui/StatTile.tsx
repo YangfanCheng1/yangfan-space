@@ -31,7 +31,7 @@ export function StatTile({ label, value, sub, tone = 'paper', to, emptyText, emp
         </>
       ) : (
         <>
-          <span className="pf-num text-4xl leading-none font-bold">{value}</span>
+          <span className="text-4xl leading-none font-bold">{value}</span>
           {sub && <div className="text-sm">{sub}</div>}
         </>
       )}

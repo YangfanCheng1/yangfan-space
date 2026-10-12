@@ -17,6 +17,7 @@
   --color-pf-lime: #b9d96a;
   --color-pf-gold: #e0b04a;
   --color-pf-clay: #d4643f;
+  --color-pf-clay-ink: #9e3d26; /* clay for text: passes 4.5:1 on paper */
 
   --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);
   --shadow-pop: 4px 4px 0 0 var(--color-ink);

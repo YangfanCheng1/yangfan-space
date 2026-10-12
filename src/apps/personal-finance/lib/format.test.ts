@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatPct, formatUSD } from './format'
+import { formatOneDecimal, formatPct, formatUSD, formatYears } from './format'
 
 describe('formatUSD', () => {
   it('formats whole dollars', () => expect(formatUSD(1234.4)).toBe('$1,234'))
@@ -16,5 +16,21 @@ describe('formatUSD', () => {
 describe('formatPct', () => {
   it('formats whole percents', () => expect(formatPct(0.4)).toBe('40%'))
   it('formats fractional percents', () => expect(formatPct(0.0425)).toBe('4.3%'))
+  it('absorbs float noise', () => {
+    expect(formatPct(0.07)).toBe('7%')
+    expect(formatPct(0.0575)).toBe('5.8%')
+    expect(formatPct(0.999, 0)).toBe('100%')
+  })
   it('handles non-finite', () => expect(formatPct(Number.NaN)).toBe('—'))
+})
+
+describe('formatOneDecimal / formatYears', () => {
+  it('rounds to one decimal', () => expect(formatOneDecimal(46.94)).toBe('46.9'))
+  it('drops .0', () => expect(formatOneDecimal(46.96)).toBe('47'))
+  it('pluralizes years', () => {
+    expect(formatYears(16.94)).toBe('16.9 years')
+    expect(formatYears(1)).toBe('1 year')
+    expect(formatYears(0)).toBe('0 years')
+  })
+  it('handles non-finite', () => expect(formatOneDecimal(Infinity)).toBe('—'))
 })

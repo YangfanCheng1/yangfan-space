@@ -182,7 +182,7 @@ Returns are **real**, meaning already adjusted for inflation, so all outputs are
   - Cells are shaded from fast (deep green) to slow (pale), and each cell also shows its number.
 - **F10. Edge states:**
   - **Already FI** (assets ≥ FI number): a celebratory state; the projection shows only the drawdown phase.
-  - **Never reaches FI** within the horizon: "Not reached by age 90", plus which lever in the grid moves it most.
+  - **Never reaches FI** within the horizon: "Not reached by age 90", plus the single change that gets there soonest. Candidates are saving 50% more (at least +$5k/yr), spending 25% less, or +1 point of return. When FI is reachable, the same "biggest lever" shows as a nudge under the headline.
   - **Invalid input:** the field shows an inline error, outputs are dimmed and keep their last valid values. The UI never shows `NaN`, `Infinity` or negative years.
 - **F11.** A collapsible **"How this is calculated"** panel shows the formulas and conventions from §6 in plain language.
 - **F12.** **Reset to defaults** button, with confirmation. Inputs persist across reloads.
@@ -357,6 +357,7 @@ These are starting values. The final contrast check (text ≥ 4.5:1, large text 
 - **Layout:**
   - At 390px, inputs stack above results and tables scroll horizontally inside their card, not the page.
   - At ≥ 1024px, the FIRE page has inputs on the left and results on the right; the inputs column is sticky.
+  - Below 1024px, a summary bar ("FI at 55.7 · $1M target") sticks to the bottom of the screen while the inputs are on screen, and jumps to the results when tapped.
 - **Trust cues:** "Stored only in this browser" near data entry, the disclaimer on the hub and FIRE pages, and the assumptions panel one click away.
 - **Sound:** uses the shared `lib/audio` cues (click, open/close) and respects the gateway's global SFX toggle. There are no sounds on keystrokes or slider drags.
 
@@ -413,7 +414,7 @@ src/apps/personal-finance/
 | M2 | FIRE tool (F1–F12) | Live outputs, chart, ladder, Coast/Barista, grid and edge states verified in browser |
 | M3 | Net Worth tool (NW1–NW12) | CRUD, presets, totals, ratios, breakdown, snapshots and history verified; data survives reload |
 | M4 | Integration + Settings (ST1–ST5) | *Use my net worth data* works; hub tiles are live; sample data loads and clears; export → wipe → import round-trips |
-| M5 | Polish | Contrast check, a11y pass, 390px pass, copy review; card status → `live` |
+| M5 | Polish | Contrast check (known: paper text on `pf-green` buttons is 3.87:1, needs ≥ 4.5:1), a11y pass, 390px pass, copy review; card status → `live` |
 
 **Later candidates (v2+):**
 - Compound-interest calculator
