@@ -76,3 +76,9 @@ export function toFireParams(i: FireInputs): FireParams {
     mode: i.projectionMode,
   }
 }
+
+/** True when FIRE inputs are untouched defaults (the hub then shows a prompt, not numbers). */
+export function isDefaultFire(i: FireInputs): boolean {
+  const keys = new Set([...Object.keys(DEFAULT_FIRE_INPUTS), ...Object.keys(i)]) as Set<keyof FireInputs>
+  return [...keys].every((k) => i[k] === DEFAULT_FIRE_INPUTS[k])
+}

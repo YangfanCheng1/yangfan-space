@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { setSoundEnabled } from '@/lib/audio'
+import { safeJSONStorage } from '@/lib/safeStorage'
 
 /** Site-wide preferences shared by the gateway and every app. */
 interface SettingsState {
@@ -16,6 +17,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'ink-frame:settings',
+      storage: safeJSONStorage(),
       onRehydrateStorage: () => (state) => setSoundEnabled(state?.soundOn ?? true),
     },
   ),

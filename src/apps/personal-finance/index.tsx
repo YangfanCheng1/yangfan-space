@@ -1,4 +1,5 @@
 import { Outlet, Route, Routes } from 'react-router-dom'
+import { Banners } from './components/Banners'
 import { Nav } from './components/Nav'
 import { Fire } from './pages/Fire'
 import { Hub } from './pages/Hub'
@@ -11,6 +12,7 @@ function Layout() {
   return (
     <div className="pf-root halftone flex min-h-dvh flex-col bg-paper font-body text-ink">
       <Nav />
+      <Banners />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 sm:px-6">
         <Outlet />
       </main>

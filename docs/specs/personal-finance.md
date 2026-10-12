@@ -200,6 +200,9 @@ Returns are **real**, meaning already adjusted for inflation, so all outputs are
   - Confirm to replace the current data.
   - An invalid file shows a clear error and nothing changes.
 - **ST3. Sample data**: load a realistic demo dataset (≈8 accounts, 6 monthly snapshots, matching FIRE inputs). This is only allowed when no user data exists, or after a confirmation that it replaces it. Sample data is marked with a banner ("You're viewing sample data · Clear") until it's cleared or edited.
+  - The dataset has 10 accounts. Its 6 monthly snapshots are derived from those accounts, so history and totals agree, and it passes the import validator.
+  - "Edited" means any change: an account, a snapshot or a FIRE input.
+  - The FIRE tiles count as "has data" once FIRE inputs differ from the defaults.
 - **ST4. Delete all data**: confirm via modal, then clear storage and return the app to its empty state.
 - **ST5. About:** the privacy statement, the disclaimer and a link to the calculation notes.
 
@@ -329,6 +332,7 @@ interface PersonalFinanceData {
   - The store is the only module that touches storage.
   - FIRE calc functions take plain dollar values (converted by `toFireParams`); net worth calc takes cents.
 - **Storage unavailable** (private mode, quota, blocked): the app still works for the session and shows a dismissible banner saying data won't be saved.
+  - Persistence goes through a never-throwing storage wrapper (`src/lib/safeStorage.ts`, also used by the gateway's settings store). Without it, a blocked `setItem` throws a SecurityError that breaks the page.
 - **Export/import:** the file format is `{ app: 'yangfan-personal-finance', exportedAt, data: PersonalFinanceData }`.
 - **Formatting:** all money is formatted as `en-US` / `USD` via `Intl.NumberFormat`. Large headline figures use a compact form ($1.2M), with the full value in a tooltip/`title`.
 

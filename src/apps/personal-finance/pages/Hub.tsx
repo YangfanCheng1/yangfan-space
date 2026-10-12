@@ -1,8 +1,13 @@
+import { useMemo } from 'react'
 import type { CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { Badge, ButtonLink, Card, StatTile } from '../components/ui'
+import { localISODate } from '../lib/calc/netWorth'
+import { formatChange, formatDate, formatOneDecimal, formatPct, formatUSD } from '../lib/format'
+import { hubFigures } from '../lib/hub'
+import { hasUserData, usePersonalFinance } from '../store'
 import { toolPath, tools } from '../tools'
 import type { ToolEntry } from '../tools'
 
@@ -39,8 +44,34 @@ function ToolCard({ tool, index }: { tool: ToolEntry; index: number }) {
   )
 }
 
+function ProgressBar({ progress }: { progress: number }) {
+  const pct = Math.min(1, Math.max(0, progress))
+  return (
+    <span
+      role="progressbar"
+      aria-label="Progress to FI"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(pct * 100)}
+      className="mb-1 block h-3 border-2 border-ink bg-paper"
+    >
+      <span className="block h-full bg-pf-green" style={{ width: `${pct * 100}%` }} />
+    </span>
+  )
+}
+
 export function Hub() {
   useDocumentTitle('Hub')
+  const accounts = usePersonalFinance((s) => s.accounts)
+  const snapshots = usePersonalFinance((s) => s.snapshots)
+  const fire = usePersonalFinance((s) => s.fire)
+  const loadSampleData = usePersonalFinance((s) => s.loadSampleData)
+  const navigate = useNavigate()
+
+  const figures = useMemo(() => hubFigures({ accounts, snapshots, fire }, localISODate()), [accounts, snapshots, fire])
+  const fresh = !hasUserData({ accounts, snapshots, fire })
+  const nw = figures.netWorth
+  const fi = figures.fire
 
   return (
     <>
@@ -67,6 +98,22 @@ export function Hub() {
               Run a FIRE projection
             </ButtonLink>
           </div>
+          {fresh && (
+            <p className="mt-5 text-sm">
+              Just looking?{' '}
+              <button
+                type="button"
+                className="cursor-pointer font-bold underline underline-offset-2"
+                onClick={() => {
+                  loadSampleData()
+                  navigate(toolPath('net-worth'))
+                }}
+              >
+                Try it with sample data
+              </button>{' '}
+              — you can clear it any time.
+            </p>
+          )}
         </Card>
 
         <Card
@@ -95,11 +142,22 @@ export function Hub() {
         </Card>
       </section>
 
-      {/* Headline tiles — wired to real data in M4 */}
+      {/* Headline tiles (spec H1–H2) */}
       <section aria-label="At a glance" className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
         <StatTile
           label="Net worth"
           to={toolPath('net-worth')}
+          value={nw ? formatUSD(nw.cents / 100) : undefined}
+          sub={
+            nw &&
+            (nw.change ? (
+              <>
+                <strong>{formatChange(nw.change.abs / 100)}</strong> since {formatDate(nw.change.since)}
+              </>
+            ) : (
+              'Save a snapshot to track the trend.'
+            ))
+          }
           emptyText="No accounts yet. Add what you own and owe to see your total."
           emptyCta="Add accounts"
         />
@@ -107,6 +165,17 @@ export function Hub() {
           label="FI progress"
           tone="lime"
           to={toolPath('fire')}
+          value={fi?.status === 'ok' ? formatPct(fi.progress, 0) : fi?.status === 'invalid' ? '—' : undefined}
+          sub={
+            fi?.status === 'ok' ? (
+              <>
+                <ProgressBar progress={fi.progress} />
+                of a {formatUSD(fi.target, { compact: true })} target
+              </>
+            ) : fi?.status === 'invalid' ? (
+              'Fix your FIRE inputs to update this.'
+            ) : undefined
+          }
           emptyText="Set your spending and savings to see how close you are."
           emptyCta="Set up FIRE"
         />
@@ -114,6 +183,28 @@ export function Hub() {
           label="Years to FI"
           tone="pine"
           to={toolPath('fire')}
+          value={
+            fi?.status === 'ok'
+              ? fi.yearsToFi === null
+                ? 'Not by 90'
+                : fi.yearsToFi === 0
+                  ? '✓ Now'
+                  : formatOneDecimal(fi.yearsToFi)
+              : fi?.status === 'invalid'
+                ? '—'
+                : undefined
+          }
+          sub={
+            fi?.status === 'ok'
+              ? fi.yearsToFi === null
+                ? 'See which change gets you there.'
+                : fi.yearsToFi === 0
+                  ? 'You’ve already reached FI.'
+                  : `FI at age ${formatOneDecimal(fi.fiAge!)} · ≈ ${fi.fiCalendarYear}`
+              : fi?.status === 'invalid'
+                ? 'Fix your FIRE inputs to update this.'
+                : undefined
+          }
           emptyText="Find out how many years until work is optional."
           emptyCta="Run projection"
         />

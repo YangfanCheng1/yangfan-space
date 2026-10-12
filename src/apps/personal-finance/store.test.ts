@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { draftFor } from './lib/accounts'
 import { DEFAULT_FIRE_INPUTS } from './lib/fireInputs'
-import { initialData, usePersonalFinance } from './store'
+import { hasUserData, initialData, usePersonalFinance } from './store'
 
 // No localStorage in the test environment; keep persist quiet.
 vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -78,5 +78,52 @@ describe('fire', () => {
     expect(store().fire.currentAge).toBe(40)
     store().resetFire()
     expect(store().fire).toEqual(DEFAULT_FIRE_INPUTS)
+  })
+})
+
+describe('sample data, replace, clear (M4)', () => {
+  it('loadSampleData replaces everything and flags it', () => {
+    store().addAccount(draftFor('cash', 'Mine'))
+    store().loadSampleData('2026-10-12')
+    expect(store().isSampleData).toBe(true)
+    expect(store().accounts.map((a) => a.name)).not.toContain('Mine')
+    expect(store().snapshots).toHaveLength(6)
+  })
+
+  it('any edit turns sample data into the user’s data', () => {
+    const edits: [string, () => void][] = [
+      ['setFire', () => store().setFire({ currentAge: 40 })],
+      ['addAccount', () => store().addAccount(draftFor('cash', 'X'))],
+      ['deleteAccount', () => store().deleteAccount(store().accounts[0].id)],
+      ['saveSnapshot', () => store().saveSnapshot(undefined, '2026-10-12')],
+      ['deleteSnapshot', () => store().deleteSnapshot(store().snapshots[0].date)],
+      ['resetFire', () => store().resetFire()],
+    ]
+    for (const [name, edit] of edits) {
+      store().loadSampleData('2026-10-12')
+      edit()
+      expect(store().isSampleData, name).toBe(false)
+    }
+  })
+
+  it('replaceAll swaps in imported data', () => {
+    store().addAccount(draftFor('cash', 'Old'))
+    store().replaceAll({ ...initialData(), accounts: [], snapshots: [], fire: { ...DEFAULT_FIRE_INPUTS, currentAge: 50 } })
+    expect(store().accounts).toEqual([])
+    expect(store().fire.currentAge).toBe(50)
+  })
+
+  it('clearAll empties the app', () => {
+    store().loadSampleData('2026-10-12')
+    store().clearAll()
+    expect(store()).toMatchObject(initialData())
+  })
+
+  it('hasUserData', () => {
+    expect(hasUserData(initialData())).toBe(false)
+    expect(hasUserData({ ...initialData(), fire: { ...DEFAULT_FIRE_INPUTS, currentAge: 31 } })).toBe(true)
+    expect(hasUserData({ ...initialData(), fire: { ...DEFAULT_FIRE_INPUTS, afterTaxIncome: 1 } })).toBe(true)
+    store().addAccount(draftFor('cash', 'A'))
+    expect(hasUserData(store())).toBe(true)
   })
 })
