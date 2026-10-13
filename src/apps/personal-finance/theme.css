@@ -22,3 +22,49 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Keyboard focus. The gateway's mustard ring is only 2:1 on this paper, so the
+ * app uses ink (14.9:1), switching to paper on dark panels (9.2:1 on pine).
+ */
+.pf-root :focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+.pf-root :is(.bg-pf-pine, .bg-ink) :focus-visible {
+  outline-color: var(--color-paper);
+}
+
+/*
+ * Sliders: a 24px-tall hit area (WCAG 2.2 target size) that still draws the
+ * thin 10px ink track from the gateway style.
+ */
+.pf-root .ink-slider {
+  height: 24px;
+  background: transparent;
+  border: 0;
+}
+.pf-root .ink-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  background: var(--color-paper);
+  border: 2.5px solid var(--color-ink);
+}
+.pf-root .ink-slider::-webkit-slider-thumb {
+  margin-top: -7.5px; /* center a 20px thumb on a 10px (border-box) track */
+}
+.pf-root .ink-slider::-moz-range-track {
+  height: 5px;
+  background: var(--color-paper);
+  border: 2.5px solid var(--color-ink);
+}
+
+/*
+ * The FIRE page's sticky summary bar (phones) floats over the inputs. Pad the
+ * scrollport so a field focused by keyboard is never hidden under it
+ * (WCAG 2.2 Focus Not Obscured).
+ */
+@media (width < 64rem) {
+  :root:has(.pf-sticky-summary) {
+    scroll-padding-bottom: 6rem;
+  }
+}

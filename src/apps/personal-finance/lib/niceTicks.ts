@@ -35,19 +35,3 @@ export function niceSpanTicks(min: number, max: number): number[] {
   for (let v = start; v <= end + step / 2; v += step) ticks.push(Math.round(v * 1e6) / 1e6 || 0)
   return ticks
 }
-
-/**
- * Like niceTicks, but for data that can dip below zero (e.g. negative net worth).
- * Always includes 0; the step comes from the full span.
- */
-export function niceRangeTicks(min: number, max: number): number[] {
-  const lo = Math.min(0, min)
-  const hi = Math.max(0, max)
-  if (lo === 0) return niceTicks(hi)
-  const step = niceTicks(hi - lo)[1]
-  const start = Math.floor(lo / step - 1e-9) * step
-  const end = Math.ceil(hi / step - 1e-9) * step
-  const ticks: number[] = []
-  for (let v = start; v <= end + step / 2; v += step) ticks.push(Math.round(v * 1e6) / 1e6 || 0)
-  return ticks
-}

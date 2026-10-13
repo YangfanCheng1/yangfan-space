@@ -18,7 +18,7 @@ export interface SnapshotModalProps {
 
 export function SnapshotModal(props: SnapshotModalProps) {
   return (
-    <Modal open={props.open} onClose={props.onClose} title={props.replacing ? 'Replace today’s snapshot?' : 'Save snapshot'}>
+    <Modal open={props.open} onClose={props.onClose} title={props.replacing ? "Replace today's snapshot?" : 'Save snapshot'}>
       {props.open && <SnapshotForm {...props} />}
     </Modal>
   )

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Approved for build. Decisions are recorded in [§11](#11-decisions-log) |
+| **Status** | Built: M0–M5 complete (2026-10-12). Decisions are in [§11](#11-decisions-log), M5 results in [§12](#12-m5-polish-results) |
 | **Route** | `/personal-finance` |
 | **Location** | `src/apps/personal-finance/` |
 | **Last updated** | 2026-10-11 |
@@ -358,7 +358,7 @@ Only the palette changes:
 | `pf-gold` | FI-number line, Coast path, secondary series | `#e0b04a` |
 | `pf-clay` | liabilities, decreases, destructive actions | `#d4643f` |
 
-These are starting values. The final contrast check (text ≥ 4.5:1, large text and UI ≥ 3:1) happens in M5 and may nudge the hex values.
+These were the starting values. The M5 contrast check changed two of them (see §12): `pf-green` is now `#25764a` and `pf-clay` is now `#b04a2b`. Chart colors are separate, validated constants in `lib/chartColors.ts`.
 
 ### UX rules
 - **Live calculation:** outputs update as you type, with no Calculate button. Number fields reformat on blur (`40000` becomes `40,000`).
@@ -446,6 +446,32 @@ src/apps/personal-finance/
 | 5 | Visual direction | Gateway style, green color theme (§8) |
 | 6 | Charts | Recharts |
 | 7 | Tests | Vitest approved |
+
+## 12. M5 polish results
+
+**Contrast** (WCAG AA: text ≥ 4.5:1, UI ≥ 3:1). Every text/background pair in use was measured:
+
+| Pair | Before | After |
+|---|---|---|
+| Paper text on primary green buttons | 3.87:1 | 5.09:1 (`pf-green` → `#25764a`) |
+| Paper text on danger (clay) buttons | 3.37:1 | 4.97:1 (`pf-clay` → `#b04a2b`) |
+| Faint text (`ink/60`) | 4.24:1 | 5.81:1 (now `ink/70`) |
+| Keyboard focus ring (gateway mustard) | 2.05:1 | ink ring 14.9:1, paper ring on dark panels 9.2:1 |
+
+**Automated audit.** axe-core 4.14 (WCAG 2.0/2.1/2.2 A/AA plus best practice) found **0 violations** across 14 pages and dialogs at 1440px and 390px. Fixes made to get there:
+- Charts no longer contain focusable parts hidden from screen readers. Recharts' keyboard layer is off; each chart has a text summary and a table.
+- Scrollable tables are focusable, labelled regions (`ScrollRegion`).
+- Dimmed "last valid" FIRE results use `inert`, so they leave both the tab order and the accessibility tree.
+- The 404 page has an `<h1>`.
+- Sliders have a 24px touch target.
+
+**Focus not obscured (WCAG 2.2).** The FIRE page's sticky summary bar (phones) could cover the focused field. Scroll padding keeps focus clear, and a check that tabs through all 25 controls at 390px confirms it.
+
+**Accepted exception.** axe's target-size rule can flag a control partly under the sticky summary bar at some scroll positions. This is position-dependent, keyboard focus is handled as above, and touch users can scroll, so only this exact case is allowed in the audit.
+
+**Copy.** Apostrophes are standardized to straight quotes (the `Sep ’26` axis date keeps its curly apostrophe). Unused placeholder code is removed. The app and both tools are marked **Live**.
+
+**Out of scope, flagged for the gateway.** Cream text on vermilion buttons is 3.40:1, and the mustard focus ring is 2.08:1 on cream. Both fall short of AA, but the colors were specified as the brand palette, so they're left for a separate decision.
 
 ---
 

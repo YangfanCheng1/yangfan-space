@@ -90,11 +90,11 @@ export function NumberField({
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="font-mono text-xs font-bold uppercase">
         {label}
-        {optional && <span className="ml-1 font-normal normal-case text-ink/60">(optional)</span>}
+        {optional && <span className="ml-1 font-normal normal-case text-ink/70">(optional)</span>}
       </label>
       <div
         className={cn(
-          'ink-border flex items-center bg-paper focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-pf-gold',
+          'ink-border flex items-center bg-paper focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-ink',
           shownError && 'border-pf-clay',
         )}
       >

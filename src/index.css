@@ -12,11 +12,11 @@
   --color-mustard: #e2a03f;
 
   /* Personal Finance app (src/apps/personal-finance) — green palette */
-  --color-pf-green: #2e8b57;
+  --color-pf-green: #25764a; /* 5.09:1 with paper text (buttons) */
   --color-pf-pine: #1d4a38;
   --color-pf-lime: #b9d96a;
   --color-pf-gold: #e0b04a;
-  --color-pf-clay: #d4643f;
+  --color-pf-clay: #b04a2b; /* 4.97:1 with paper text (danger buttons) */
   --color-pf-clay-ink: #9e3d26; /* clay for text: passes 4.5:1 on paper */
 
   --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);

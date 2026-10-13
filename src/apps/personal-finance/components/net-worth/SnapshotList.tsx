@@ -3,6 +3,7 @@ import { change, snapshotNetWorth } from '../../lib/calc/netWorth'
 import { formatChange, formatDate, formatPct, formatUSD } from '../../lib/format'
 import type { NetWorthSnapshot } from '../../types'
 import { Card } from '../ui'
+import { ScrollRegion } from '../ui/ScrollRegion'
 
 /** Spec NW12 — also the table view for the history chart. Newest first. */
 export function SnapshotList({ snapshots, onDelete }: { snapshots: NetWorthSnapshot[]; onDelete: (s: NetWorthSnapshot) => void }) {
@@ -12,7 +13,7 @@ export function SnapshotList({ snapshots, onDelete }: { snapshots: NetWorthSnaps
   return (
     <Card className="p-5">
       <h2 className="font-display text-xl uppercase">Snapshots</h2>
-      <div className="relative mt-3 overflow-x-auto">
+      <ScrollRegion label="Snapshots table" className="mt-3">
         <table className="w-full min-w-[36rem] text-sm">
           <caption className="sr-only">Net worth snapshots, newest first</caption>
           <thead className="font-mono text-xs uppercase">
@@ -47,7 +48,7 @@ export function SnapshotList({ snapshots, onDelete }: { snapshots: NetWorthSnaps
                         {d.pct !== null && <span className="block text-xs">{`${d.pct >= 0 ? '+' : '−'}${formatPct(Math.abs(d.pct))}`}</span>}
                       </>
                     ) : (
-                      <span className="text-ink/60">first</span>
+                      <span className="text-ink/70">first</span>
                     )}
                   </td>
                   <td className="max-w-48 py-2 pr-3 text-xs break-words">{s.note}</td>
@@ -66,7 +67,7 @@ export function SnapshotList({ snapshots, onDelete }: { snapshots: NetWorthSnaps
             })}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </Card>
   )
 }

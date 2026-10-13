@@ -78,7 +78,7 @@ export function Fire() {
           <a
             href="#fire-results"
             className={cn(
-              'ink-border shadow-pop sticky bottom-3 z-10 mt-4 flex items-center justify-between gap-3 px-4 py-3 text-sm lg:hidden',
+              'pf-sticky-summary ink-border shadow-pop sticky bottom-3 z-10 mt-4 flex items-center justify-between gap-3 px-4 py-3 text-sm lg:hidden',
               invalid ? 'bg-pf-gold text-ink' : 'bg-pf-pine text-paper',
             )}
           >
@@ -102,7 +102,7 @@ export function Fire() {
               results. Showing your last valid plan.
             </p>
           )}
-          <div className={cn('flex flex-col gap-6 transition-opacity', invalid && 'pointer-events-none opacity-50')} aria-hidden={invalid || undefined}>
+          <div className={cn('flex flex-col gap-6 transition-opacity', invalid && 'opacity-50')} inert={invalid}>
             <FireHeadline result={view.result} params={view.params} lever={view.lever} />
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <CoastCard result={view.result} params={view.params} />

@@ -199,7 +199,7 @@ export function Hub() {
               ? fi.yearsToFi === null
                 ? 'See which change gets you there.'
                 : fi.yearsToFi === 0
-                  ? 'You’ve already reached FI.'
+                  ? "You've already reached FI."
                   : `FI at age ${formatOneDecimal(fi.fiAge!)} · ≈ ${fi.fiCalendarYear}`
               : fi?.status === 'invalid'
                 ? 'Fix your FIRE inputs to update this.'

@@ -53,7 +53,7 @@ export function NetWorthSummary({ summary, snapshots, today, onSaveSnapshot }: N
             </p>
           </div>
           <Button variant="lime" onClick={onSaveSnapshot}>
-            {savedToday ? 'Update today’s snapshot' : 'Save snapshot'}
+            {savedToday ? "Update today's snapshot" : 'Save snapshot'}
           </Button>
         </div>
         <dl className="grid grid-cols-2 gap-4 border-t-2 border-dashed border-paper/50 pt-4">

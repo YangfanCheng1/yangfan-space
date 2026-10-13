@@ -3,6 +3,7 @@ import type { FireParams, FireResult } from '../../lib/calc/fire'
 import { SPEED_RAMP, SPEED_RAMP_TEXT } from '../../lib/chartColors'
 import { formatOneDecimal, formatPct, formatUSD } from '../../lib/format'
 import { Card } from '../ui'
+import { ScrollRegion } from '../ui/ScrollRegion'
 
 const multiplierLabel = (m: number) => (m === 1 ? 'You' : `${m > 1 ? '+' : '−'}${Math.round(Math.abs(m - 1) * 100)}%`)
 
@@ -27,7 +28,7 @@ export function SensitivityGrid({ result, params }: { result: FireResult; params
         Years to FI for different returns and savings. Darker = sooner; — = not by age 90.
         {userRow === -1 && ` Your ${formatPct(params.realReturn)} return falls between rows.`}
       </p>
-      <div className="relative mt-4 overflow-x-auto">
+      <ScrollRegion label="What-if grid" className="mt-4">
         <table className="w-full min-w-[30rem] border-separate border-spacing-1 text-sm">
           <caption className="sr-only">Years to FI by real return (rows) and annual contribution (columns)</caption>
           <thead>
@@ -76,7 +77,7 @@ export function SensitivityGrid({ result, params }: { result: FireResult; params
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </Card>
   )
 }

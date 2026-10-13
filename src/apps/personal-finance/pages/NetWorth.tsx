@@ -123,7 +123,7 @@ export function NetWorth() {
       >
         {deletingSnapshot && (
           <p>
-            Remove the snapshot from <strong>{formatDate(deletingSnapshot.date)}</strong>? Your accounts aren’t affected.
+            Remove the snapshot from <strong>{formatDate(deletingSnapshot.date)}</strong>? Your accounts aren't affected.
           </p>
         )}
       </ConfirmModal>

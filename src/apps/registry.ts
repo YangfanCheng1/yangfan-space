@@ -55,7 +55,7 @@ export const apps: AppEntry[] = [
     title: 'Personal Finance',
     tagline: 'Count it. Then plan the exit.',
     description: 'Net worth tracker and FIRE projection. Private, in-browser, USD.',
-    status: 'wip',
+    status: 'live',
     accent: 'teal',
     tags: ['money', 'fire'],
     component: lazy(() => import('./personal-finance')),

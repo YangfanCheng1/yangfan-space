@@ -22,7 +22,7 @@ export const tools: ToolEntry[] = [
     navLabel: 'Net Worth',
     tagline: 'Where you stand, today.',
     description: 'Everything you own minus everything you owe, by category, with snapshots to track the trend.',
-    status: 'wip',
+    status: 'live',
     accent: 'green',
   },
   {
@@ -31,7 +31,7 @@ export const tools: ToolEntry[] = [
     navLabel: 'FIRE',
     tagline: 'When work becomes optional.',
     description: 'Your FI number, years to get there, Coast and Barista FIRE, and whether the money lasts.',
-    status: 'wip',
+    status: 'live',
     accent: 'pine',
   },
 ]

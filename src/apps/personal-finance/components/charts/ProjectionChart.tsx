@@ -20,6 +20,7 @@ import { formatOneDecimal, formatPct, formatUSD } from '../../lib/format'
 import { niceTicks } from '../../lib/niceTicks'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { Card } from '../ui'
+import { ScrollRegion } from '../ui/ScrollRegion'
 
 const tick = { fontFamily: CHART_FONT, fontSize: 11, fill: CHART.muted }
 const compact = (v: number) => formatUSD(v, { compact: true })
@@ -108,7 +109,7 @@ export function ProjectionChart({ result, params }: { result: FireResult; params
 
       <div className="mt-4 h-72 sm:h-80" aria-hidden>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 20, right: 12, bottom: 0, left: 0 }}>
+          <ComposedChart accessibilityLayer={false} data={data} margin={{ top: 20, right: 12, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke={CHART.grid} strokeWidth={1} />
             {fiAge !== null && fiAge < MAX_AGE && (
               <ReferenceArea x1={Math.max(fiAge, data[0].age)} x2={MAX_AGE} fill={CHART.ink} fillOpacity={0.04} stroke="none" ifOverflow="hidden" />
@@ -201,7 +202,7 @@ export function ProjectionChart({ result, params }: { result: FireResult; params
         {showTable ? 'Hide table' : 'Show table'}
       </button>
       {showTable && (
-        <div id={tableId} className="relative mt-3 max-h-80 overflow-auto border-2 border-ink">
+        <ScrollRegion id={tableId} label="Projection table" className="mt-3 max-h-80 overflow-auto border-2 border-ink">
           <table className="w-full text-sm">
             <caption className="sr-only">Portfolio projection by year</caption>
             <thead className="sticky top-0 bg-pf-lime font-mono text-xs uppercase">
@@ -225,7 +226,7 @@ export function ProjectionChart({ result, params }: { result: FireResult; params
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       )}
     </Card>
   )

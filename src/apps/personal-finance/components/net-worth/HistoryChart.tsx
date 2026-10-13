@@ -129,7 +129,7 @@ export function HistoryChart({ snapshots }: { snapshots: NetWorthSnapshot[] }) {
 
       <div className="mt-4 h-64 sm:h-72" aria-hidden>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 12, right: 16, bottom: 0, left: 0 }}>
+          <LineChart accessibilityLayer={false} data={data} margin={{ top: 12, right: 16, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke={CHART.grid} strokeWidth={1} />
             <XAxis
               dataKey="t"

@@ -77,7 +77,7 @@ function AccountForm({ initial, onCancel, onSave }: { initial: { id?: string; dr
         onChange={setBalanceText}
         onParseErrorChange={setBalanceParseError}
         error={visible.balance}
-        hint={isAsset ? undefined : 'Enter it as a positive number; it’s subtracted from your net worth.'}
+        hint={isAsset ? undefined : "Enter it as a positive number; it's subtracted from your net worth."}
       />
       {isAsset && (
         <fieldset className="flex flex-col gap-2">

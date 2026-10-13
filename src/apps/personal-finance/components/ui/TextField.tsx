@@ -2,14 +2,14 @@ import { useId } from 'react'
 import type { ReactNode, SelectHTMLAttributes } from 'react'
 import { cn } from '@/lib/cn'
 
-const box = 'ink-border w-full bg-paper px-3 py-2 text-base outline-none focus:outline-3 focus:outline-offset-2 focus:outline-pf-gold'
+const box = 'ink-border w-full bg-paper px-3 py-2 text-base outline-none focus:outline-3 focus:outline-offset-2 focus:outline-ink'
 
 function FieldShell({ id, label, optional, error, hint, children }: { id: string; label: string; optional?: boolean; error?: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="font-mono text-xs font-bold uppercase">
         {label}
-        {optional && <span className="ml-1 font-normal normal-case text-ink/60">(optional)</span>}
+        {optional && <span className="ml-1 font-normal normal-case text-ink/70">(optional)</span>}
       </label>
       {children}
       <p id={`${id}-error`} aria-live="polite" className={cn('text-xs font-bold text-pf-clay-ink', !error && 'sr-only')}>
