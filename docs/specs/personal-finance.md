@@ -54,7 +54,7 @@ The primary user is someone curious about their finances and comfortable enterin
 ## 4. Information architecture
 
 ```
-/                               Gateway (Ink & Frame) → new card "Personal Finance"
+/                               Gateway (Yangfan's Space) → new card "Personal Finance"
 /personal-finance               Hub: headline tiles + tool cards
 /personal-finance/net-worth     Net Worth tool
 /personal-finance/fire          FIRE Projection tool
@@ -67,7 +67,7 @@ The primary user is someone curious about their finances and comfortable enterin
 - **Navigation:**
   - A persistent top bar shows the app wordmark and links to Hub · Net Worth · FIRE · Settings. On mobile these become a horizontally scrollable tab row.
   - The current page is marked with `aria-current`.
-  - A "← Ink & Frame" link back to the gateway sits in the top bar on desktop and at the end of the tab row on mobile. The app doesn't use the fixed `BackToGateway` chip, which would cover the footer.
+  - A "← Yangfan's Space" link back to the gateway sits in the top bar on desktop and at the end of the tab row on mobile. The app doesn't use the fixed `BackToGateway` chip, which would cover the footer.
 - Deep links and reloads land on the right tool. An unknown sub-path shows an in-app 404 that links back to the hub.
 - Each tool sets the document title, e.g. "FIRE Projection · Personal Finance".
 

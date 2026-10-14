@@ -22,7 +22,7 @@ export function BackToGateway() {
         textDecoration: 'none',
       }}
     >
-      ← Ink &amp; Frame
+      ← Yangfan's Space
     </Link>
   )
 }

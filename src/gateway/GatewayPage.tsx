@@ -18,10 +18,10 @@ export function GatewayPage() {
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
         <a href="/" className="flex items-center gap-2">
           <span className="ink-border bg-ink px-3 py-1.5 font-display text-lg tracking-wide text-paper uppercase sm:text-xl">
-            Ink <span className="text-mustard">&amp;</span> Frame
+            Yangfan<span className="text-mustard">&apos;s</span> Space
           </span>
           <span className="hidden sm:inline">
-            <Badge tone="mustard">ComixLab</Badge>
+            <Badge tone="mustard">Est. 2026</Badge>
           </span>
         </a>
         <Button variant="ghost" size="sm" onClick={toggleSound} aria-pressed={soundOn} sound={!soundOn}>
@@ -33,24 +33,24 @@ export function GatewayPage() {
         {/* Hero spread */}
         <section className="grid grid-cols-1 gap-6 md:grid-cols-[1.5fr_1fr]">
           <Card className="min-w-0 p-6 sm:p-10">
-            <p className="font-mono text-xs font-bold tracking-widest uppercase">Vol. 1 · Issue #01 · Oct 2026</p>
+            <p className="font-mono text-xs font-bold tracking-widest uppercase">Vol. 1 · Oct 2026 · Personal workshop</p>
             <h1 className="mt-4 font-display text-[2.4rem] leading-[0.92] uppercase sm:text-6xl lg:text-7xl">
-              Small studio.
+              Yangfan&apos;s
               <br />
-              <span className="ink-border shadow-pop-sm my-2 inline-block -rotate-1 bg-vermilion px-2 text-paper">Strange</span>
+              <span className="ink-border shadow-pop-sm my-2 inline-block -rotate-1 bg-vermilion px-2 text-paper">Space</span>
               <br />
-              machines.
+              Apps I build.
             </h1>
             <p className="mt-6 max-w-prose text-base sm:text-lg">
-              Ink &amp; Frame is an indie comic studio and workbench. Every panel below opens a tool, toy or story
-              we've built. Step into any of them.
+              My corner of the internet for the web apps I build: tools I actually use, experiments, and things I
+              wanted to exist. Every panel below opens one. Step into any of them.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button size="lg" onClick={() => document.getElementById('apps')?.scrollIntoView({ behavior: 'smooth' })}>
                 Browse the apps ↓
               </Button>
               <Button size="lg" variant="ghost" onClick={() => setAboutOpen(true)} sound={false}>
-                About the studio
+                About this space
               </Button>
             </div>
           </Card>
@@ -101,15 +101,15 @@ export function GatewayPage() {
 
       <footer className="border-t-[2.5px] border-ink bg-ink text-paper">
         <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-4 py-4 font-mono text-xs uppercase sm:px-6">
-          <span>© 2026 Ink &amp; Frame (ComixLab)</span>
-          <span>Drawn panel by panel.</span>
+          <span>© 2026 Yangfan's Space</span>
+          <span>Built panel by panel.</span>
         </div>
       </footer>
 
-      <Modal open={aboutOpen} onClose={() => setAboutOpen(false)} title="About the studio">
+      <Modal open={aboutOpen} onClose={() => setAboutOpen(false)} title="About this space">
         <p>
-          We're a one-desk comic studio that keeps building its own instruments: readers, character makers, galleries
-          and whatever else the next story needs.
+          Hi, I'm Yangfan. This is where I keep the web apps I make. Some are useful, some are just for fun, and all
+          of them are works in progress.
         </p>
         <p className="mt-3">Each app here is its own little world with its own look. This page is just the front door.</p>
         <div className="mt-5 flex justify-end">

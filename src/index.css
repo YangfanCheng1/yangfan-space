@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * Gateway design tokens (Ink & Frame). Apps under src/apps/* are free to
+ * Gateway design tokens (Yangfan's Space). Apps under src/apps/* are free to
  * ignore these and bring their own look — nothing here styles them globally.
  */
 @theme {

@@ -16,7 +16,7 @@ export const useSettingsStore = create<SettingsState>()(
       toggleSound: () => set((s) => ({ soundOn: !s.soundOn })),
     }),
     {
-      name: 'ink-frame:settings',
+      name: 'yangfan:settings',
       storage: safeJSONStorage(),
       onRehydrateStorage: () => (state) => setSoundEnabled(state?.soundOn ?? true),
     },

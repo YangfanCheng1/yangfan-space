@@ -27,7 +27,7 @@ export function Nav() {
         </Link>
         <div className="flex items-center gap-3">
           <Link to="/" className="hidden font-mono text-xs font-bold uppercase underline-offset-4 hover:underline sm:inline">
-            ← Ink &amp; Frame
+            ← Yangfan's Space
           </Link>
           <Button variant="ghost" size="sm" className="whitespace-nowrap" onClick={toggleSound} aria-pressed={soundOn} sound={!soundOn}>
             SFX: {soundOn ? 'On' : 'Off'}
@@ -55,7 +55,7 @@ export function Nav() {
           ))}
           <li className="sm:hidden">
             <Link to="/" className="ink-border inline-block bg-ink px-4 py-2 font-mono text-xs font-bold text-paper uppercase">
-              ← Ink &amp; Frame
+              ← Yangfan's Space
             </Link>
           </li>
         </ul>
