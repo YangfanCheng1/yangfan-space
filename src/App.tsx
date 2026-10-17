@@ -6,6 +6,7 @@ import { About } from '@/site/pages/About'
 import { Blog } from '@/site/pages/Blog'
 import { Home } from '@/site/pages/Home'
 import { NotFound } from '@/site/pages/NotFound'
+import { Post } from '@/site/pages/Post'
 import { Projects } from '@/site/pages/Projects'
 
 function Loading() {
@@ -22,6 +23,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="projects" element={<Projects />} />
             <Route path="blog" element={<Blog />} />
+            <Route path="blog/:slug" element={<Post />} />
             <Route path="about" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Route>

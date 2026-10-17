@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { builtApps, plannedApps } from '@/apps/registry'
 import { ButtonLink, Card } from '@/components/ui'
+import { posts } from '@/content/posts'
+import { PostList } from '../components/PostList'
 import { Placeholder } from '../components/Placeholder'
 import { ProjectCard } from '../components/ProjectCard'
 import { SectionHeading } from '../components/SectionHeading'
@@ -63,7 +65,7 @@ export function Home() {
             {[
               [builtApps.length, 'Live'],
               [plannedApps.length, 'On the bench'],
-              [0, 'Posts'],
+              [posts.length, 'Posts'],
             ].map(([n, label]) => (
               <div key={label} className="flex flex-col-reverse">
                 <dt className="mt-1 font-mono text-[11px] uppercase">{label}</dt>
@@ -86,15 +88,19 @@ export function Home() {
         </div>
       </section>
 
-      {/* Latest posts (spec HM3) — the blog arrives in P2 */}
+      {/* Latest posts (spec HM3) */}
       <section className="mt-16" aria-labelledby="latest">
         <SectionHeading note={<Link to="/blog" className="underline underline-offset-4">All posts →</Link>}>
           <span id="latest">Latest writing</span>
         </SectionHeading>
-        <Card className="p-6">
-          <p className="font-display text-xl uppercase">First post coming soon</p>
-          <p className="mt-2 text-sm text-ink/75">Notes on building things: what worked, what didn&apos;t, and what I&apos;d change.</p>
-        </Card>
+        {posts.length ? (
+          <PostList posts={posts.slice(0, 3)} headingLevel={3} />
+        ) : (
+          <Card className="p-6">
+            <p className="font-display text-xl uppercase">First post coming soon</p>
+            <p className="mt-2 text-sm text-ink/75">Notes on building things: what worked, what didn&apos;t, and what I&apos;d change.</p>
+          </Card>
+        )}
       </section>
     </>
   )

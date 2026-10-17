@@ -1,0 +1,52 @@
+---
+title: "Sample: what a post can do"
+date: 2026-10-16
+summary: A test post that exercises every piece of the MDX pipeline. It's a draft, so it never ships.
+tags: [meta, mdx]
+draft: true
+---
+
+This post exists to check the blog pipeline end to end. It's marked `draft: true`, so it shows up in the dev server and is left out of production builds. Delete it once the first real post is written.
+
+## Plain Markdown
+
+Paragraphs, **bold**, _italic_, `inline code` and [links](/projects) all work. So do lists:
+
+- Front matter is validated at build time.
+- Reading time is computed from the prose (code blocks don't count).
+- Drafts are hidden in production.
+
+1. Write a `.mdx` file in `src/content/posts/`.
+2. Commit it.
+3. It appears on `/blog` and the home page.
+
+> A blockquote, for the occasional pull quote.
+
+| Feature | Where it lives |
+| --- | --- |
+| Validation | `src/content/schema.ts` |
+| Build plugin | `build/remarkContentMeta.ts` |
+| Loader | `src/content/posts.ts` |
+
+## Code
+
+```ts
+export function readingMinutes(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.ceil(words / 230))
+}
+```
+
+## Components
+
+<Callout kind="tip" title="Callouts">
+  Asides like this one stand out from the prose without breaking the reading flow.
+</Callout>
+
+And the part plain Markdown can't do: a live piece of an app, right inside the post.
+
+<Demo name="fire-projection" />
+
+---
+
+That's everything P1 adds. Highlighting, heading anchors and previous/next links come in P2.
