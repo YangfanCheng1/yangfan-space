@@ -7,7 +7,7 @@
 @theme {
   --color-ink: #1e1e24;
   --color-paper: #f8f6f0;
-  --color-vermilion: #e05a47;
+  --color-vermilion: #c4432f; /* 4.64:1 with cream text (was #e05a47, 3.40:1) */
   --color-teal: #2a525a;
   --color-mustard: #e2a03f;
 
@@ -64,9 +64,13 @@
 }
 
 @layer base {
+  /* Ink ring (15:1 on cream); cream ring on dark panels (≥ 7.9:1). Mustard was 2.1:1. */
   :focus-visible {
-    outline: 3px solid var(--color-mustard);
+    outline: 3px solid var(--color-ink);
     outline-offset: 2px;
+  }
+  :is(.bg-ink, .bg-teal) :focus-visible {
+    outline-color: var(--color-paper);
   }
 }
 

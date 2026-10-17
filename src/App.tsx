@@ -1,24 +1,15 @@
 import { Suspense } from 'react'
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
-import { apps } from '@/apps/registry'
-import { GatewayPage } from '@/gateway/GatewayPage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { builtApps } from '@/apps/registry'
+import { SiteLayout } from '@/site/components/SiteLayout'
+import { About } from '@/site/pages/About'
+import { Blog } from '@/site/pages/Blog'
+import { Home } from '@/site/pages/Home'
+import { NotFound } from '@/site/pages/NotFound'
+import { Projects } from '@/site/pages/Projects'
 
 function Loading() {
   return <div className="grid min-h-dvh place-items-center bg-ink font-mono text-sm text-paper uppercase">Loading…</div>
-}
-
-function NotFound() {
-  return (
-    <div className="halftone grid min-h-dvh place-items-center bg-paper p-6 text-center text-ink">
-      <div>
-        <p className="font-display text-7xl">404</p>
-        <p className="mt-2 font-mono uppercase">This panel was never drawn.</p>
-        <Link to="/" className="mt-6 inline-block font-mono font-bold underline">
-          ← Back to the front door
-        </Link>
-      </div>
-    </div>
-  )
 }
 
 export default function App() {
@@ -26,11 +17,18 @@ export default function App() {
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/" element={<GatewayPage />} />
-          {apps.map(({ slug, component: AppComponent }) =>
+          {/* Portfolio + blog (spec: docs/specs/portfolio-blog.md) */}
+          <Route element={<SiteLayout />}>
+            <Route index element={<Home />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="about" element={<About />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          {/* Apps keep their own routes and looks */}
+          {builtApps.map(({ slug, component: AppComponent }) =>
             AppComponent ? <Route key={slug} path={`/${slug}/*`} element={<AppComponent />} /> : null,
           )}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
