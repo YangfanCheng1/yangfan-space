@@ -1,17 +1,33 @@
 import { useEffect, useState } from 'react'
 import type { MDXContent } from 'mdx/types'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { Badge } from '@/components/ui'
-import { getPost, loadPostBody } from '@/content/posts'
+import { adjacentPosts } from '@/content/postUtils'
+import { getPost, loadPostBody, posts } from '@/content/posts'
+import type { PostMeta } from '@/content/schema'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatDate, formatReading } from '../lib/format'
 import { mdxComponents } from '../mdx/components'
 import '../prose.css'
 import { NotFound } from './NotFound'
 
-/** /blog/:slug — P1 renders the MDX body; P2 adds anchors, highlighting and prev/next. */
+function Neighbour({ post, dir }: { post: PostMeta; dir: 'newer' | 'older' }) {
+  return (
+    <Link
+      to={`/blog/${post.slug}`}
+      rel={dir === 'newer' ? 'next' : 'prev'}
+      className={`ink-border shadow-pop pressable block bg-paper px-4 py-3 ${dir === 'older' ? 'sm:text-right' : ''}`}
+    >
+      <span className="font-mono text-xs font-bold uppercase">{dir === 'newer' ? '← Newer' : 'Older →'}</span>
+      <span className="mt-1 block font-display leading-tight uppercase">{post.title}</span>
+    </Link>
+  )
+}
+
+/** /blog/:slug (spec BL2). */
 export function Post() {
   const { slug = '' } = useParams()
+  const { hash } = useLocation()
   const meta = getPost(slug)
   const [body, setBody] = useState<{ slug: string; Content: MDXContent } | null>(null)
 
@@ -28,8 +44,15 @@ export function Post() {
     }
   }, [slug, meta])
 
-  if (!meta) return <NotFound />
   const Content = body?.slug === slug ? body.Content : null
+
+  // The body loads after the page, so the browser can't jump to #section by itself.
+  useEffect(() => {
+    if (Content && hash) document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView()
+  }, [Content, hash])
+
+  if (!meta) return <NotFound />
+  const { newer, older } = adjacentPosts(posts, slug)
 
   return (
     <article className="mx-auto max-w-[68ch]">
@@ -54,16 +77,26 @@ export function Post() {
         <h1 className="mt-3 font-display text-4xl leading-[0.95] uppercase sm:text-5xl">{meta.title}</h1>
         <p className="mt-4 text-lg text-ink/80">{meta.summary}</p>
         {meta.tags.length > 0 && (
-          <p className="mt-4 flex flex-wrap gap-2">
+          <ul aria-label="Tags" className="mt-4 flex flex-wrap gap-2">
             {meta.tags.map((t) => (
-              <Badge key={t}>#{t}</Badge>
+              <li key={t}>
+                <Link to={`/blog?tag=${encodeURIComponent(t)}`} className="inline-block hover:bg-mustard/40">
+                  <Badge>#{t}</Badge>
+                </Link>
+              </li>
             ))}
-          </p>
+          </ul>
         )}
       </header>
       <div className="prose-ink">
         {Content ? <Content components={mdxComponents} /> : <p className="font-mono text-sm uppercase">Loading…</p>}
       </div>
+      {(newer || older) && (
+        <nav aria-label="More posts" className="mt-16 grid grid-cols-1 gap-4 border-t-[2.5px] border-dashed border-ink pt-8 sm:grid-cols-2">
+          <div>{newer && <Neighbour post={newer} dir="newer" />}</div>
+          <div>{older && <Neighbour post={older} dir="older" />}</div>
+        </nav>
+      )}
     </article>
   )
 }

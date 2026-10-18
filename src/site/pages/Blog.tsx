@@ -1,23 +1,70 @@
+import { Link, useSearchParams } from 'react-router-dom'
 import { Card } from '@/components/ui'
+import { filterByTag, tagCounts } from '@/content/postUtils'
 import { posts } from '@/content/posts'
+import { cn } from '@/lib/cn'
 import { PostList } from '../components/PostList'
 import { SectionHeading } from '../components/SectionHeading'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
+const chip = 'ink-border inline-block px-3 py-1.5 font-mono text-xs font-bold uppercase'
+
+/** /blog, with a tag filter kept in the URL (?tag=react) so it can be shared (spec BL1). */
 export function Blog() {
-  useDocumentTitle('Blog')
+  const [params] = useSearchParams()
+  const tag = params.get('tag')
+  const tags = tagCounts(posts)
+  const shown = filterByTag(posts, tag)
+
+  useDocumentTitle(tag ? `Posts tagged #${tag}` : 'Blog')
+
   return (
     <>
       <SectionHeading level={1} note={posts.length ? `${posts.length} post${posts.length === 1 ? '' : 's'}` : undefined}>
         Blog
       </SectionHeading>
-      <p className="mb-8 max-w-prose text-base sm:text-lg">Notes on building things: what worked, what didn&apos;t, and what I&apos;d change.</p>
-      {posts.length ? (
-        <PostList posts={posts} />
+      <p className="mb-6 max-w-prose text-base sm:text-lg">Notes on building things: what worked, what didn&apos;t, and what I&apos;d change.</p>
+
+      {tags.length > 0 && (
+        <nav aria-label="Filter by tag" className="mb-8">
+          <ul className="flex flex-wrap gap-2">
+            <li>
+              <Link to="/blog" aria-current={!tag ? 'page' : undefined} className={cn(chip, !tag ? 'shadow-pop-sm bg-ink text-paper' : 'bg-paper hover:bg-mustard/40')}>
+                All
+              </Link>
+            </li>
+            {tags.map(({ tag: t, count }) => (
+              <li key={t}>
+                <Link
+                  to={`/blog?tag=${encodeURIComponent(t)}`}
+                  aria-current={tag === t ? 'page' : undefined}
+                  className={cn(chip, tag === t ? 'shadow-pop-sm bg-ink text-paper' : 'bg-paper hover:bg-mustard/40')}
+                >
+                  #{t} <span className="font-normal">({count})</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+
+      {shown.length ? (
+        <PostList posts={shown} />
       ) : (
         <Card className="p-6">
-          <p className="font-display text-xl uppercase">No posts yet</p>
-          <p className="mt-2 text-sm text-ink/75">The first one is on its way.</p>
+          {posts.length ? (
+            <>
+              <p className="font-display text-xl uppercase">No posts tagged #{tag}</p>
+              <Link to="/blog" className="mt-2 inline-block font-mono text-xs font-bold uppercase underline underline-offset-4">
+                Show all posts
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="font-display text-xl uppercase">No posts yet</p>
+              <p className="mt-2 text-sm text-ink/75">The first one is on its way.</p>
+            </>
+          )}
         </Card>
       )}
     </>

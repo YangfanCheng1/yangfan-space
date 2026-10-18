@@ -97,3 +97,25 @@
 .prose-ink > :first-child {
   margin-top: 0;
 }
+
+/* Self-linking headings: look like headings, reveal a # on hover/focus. */
+.prose-ink .heading-anchor {
+  font-weight: inherit;
+  text-decoration: none;
+}
+.prose-ink .heading-anchor:hover {
+  background: none;
+}
+.prose-ink .heading-anchor::after {
+  content: ' #';
+  opacity: 0;
+  color: var(--color-vermilion);
+}
+.prose-ink .heading-anchor:is(:hover, :focus-visible)::after {
+  opacity: 1;
+}
+
+/* Shiki sets its own background/colors inline; keep the ink frame and give the copy button room. */
+.prose-ink pre.shiki {
+  padding-top: 2.25rem;
+}

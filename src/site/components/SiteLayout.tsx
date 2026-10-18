@@ -3,6 +3,7 @@ import { Badge, Button } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import { useSettingsStore } from '@/store/useSettingsStore'
 import { site } from '../site'
+import { ScrollToTop } from './ScrollToTop'
 
 const nav = [
   { to: '/', label: 'Home', end: true },
@@ -17,6 +18,7 @@ export function SiteLayout() {
 
   return (
     <div className="halftone flex min-h-dvh flex-col bg-paper font-body text-ink">
+      <ScrollToTop />
       <a
         href="#main"
         className="ink-border sr-only z-50 bg-paper px-3 py-2 font-mono text-xs font-bold uppercase focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -62,6 +64,9 @@ export function SiteLayout() {
             </a>
             <a href={site.aboutPage} className="underline-offset-4 hover:underline">
               Professional page
+            </a>
+            <a href="/rss.xml" className="underline-offset-4 hover:underline">
+              RSS
             </a>
           </span>
         </div>

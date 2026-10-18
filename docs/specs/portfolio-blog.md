@@ -152,7 +152,7 @@ order: 1
   - Pre-rendering runs each portfolio page once at build time and saves the finished HTML, with the right `<title>`, description and Open Graph image baked in. Visitors still get the same interactive React site once JavaScript loads.
   - This applies to home, projects, blog and about. The apps (e.g. `/personal-finance`) stay client-only, because they're per-visitor and private.
   - Tool: `vite-react-ssg`, or a small custom script if it fights the existing router.
-- **RSS** is generated in the same build step.
+- **RSS** is generated in the same build step (`build/rssPlugin.ts`) and served at `/rss.xml` in dev. Drafts are never included. Feed links need an absolute origin from the `SITE_URL` environment variable, set at deploy time (P6); without it the build warns and uses localhost.
 - **Hosting** (decision Q5) follows `lgp-tax-wealth`: Google Cloud Run.
   - A Dockerfile builds the site, then serves `dist/` with nginx. Pre-rendered pages are served as-is; unknown paths fall back to `index.html` so app routes work. Assets get long cache headers.
   - The image is pushed to Artifact Registry (`<region>-docker.pkg.dev/<project>/yangfan-images`).
