@@ -22,8 +22,12 @@ export function rssPlugin({ postsDir, metaOptions, title, description }: RssPlug
     return buildRss({ siteUrl, title, description, posts })
   }
 
+  let ssrBuild = false
   return {
     name: 'yangfan:rss',
+    configResolved(config) {
+      ssrBuild = Boolean(config.build.ssr)
+    },
     configureServer(server) {
       server.middlewares.use('/rss.xml', async (req, res, next) => {
         try {
@@ -36,6 +40,7 @@ export function rssPlugin({ postsDir, metaOptions, title, description }: RssPlug
       })
     },
     async generateBundle() {
+      if (ssrBuild) return // the feed belongs to the client build (dist/), not dist-ssr/
       let siteUrl = process.env.SITE_URL
       if (!siteUrl) {
         siteUrl = 'http://localhost:5173'

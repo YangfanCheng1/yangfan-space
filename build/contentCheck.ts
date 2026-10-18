@@ -29,10 +29,15 @@ export function formatReport(missing: { required: string[]; optional: string[] }
 
 /** Lists unwritten content on every production build, so placeholders never ship unnoticed. */
 export function contentCheck({ contentDir, root }: { contentDir: string; root: string }): Plugin {
+  let ssrBuild = false
   return {
     name: 'yangfan:content-check',
     apply: 'build',
+    configResolved(config) {
+      ssrBuild = Boolean(config.build.ssr)
+    },
     async buildStart() {
+      if (ssrBuild) return // report once, in the client build
       const report = formatReport(missingContent(), await placeholdersIn(contentDir, root))
       if (report) this.warn(report)
     },

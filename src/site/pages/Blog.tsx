@@ -5,7 +5,7 @@ import { posts } from '@/content/posts'
 import { PostList } from '../components/PostList'
 import { SectionHeading } from '../components/SectionHeading'
 import { TagFilter } from '../components/TagFilter'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 
 /** /blog, with a tag filter kept in the URL (?tag=react) so it can be shared (spec BL1). */
 export function Blog() {
@@ -14,7 +14,11 @@ export function Blog() {
   const tags = tagCounts(posts)
   const shown = filterByTag(posts, tag)
 
-  useDocumentTitle(tag ? `Posts tagged #${tag}` : 'Blog')
+  usePageMeta({
+    title: tag ? `Posts tagged #${tag}` : 'Blog',
+    description: 'Notes on building things: what worked, what didn\'t, and what I\'d change.',
+    path: '/blog',
+  })
 
   return (
     <>

@@ -2,7 +2,7 @@ import AboutBody from '@/content/about.mdx'
 import { Card } from '@/components/ui'
 import { Placeholder } from '../components/Placeholder'
 import { SectionHeading } from '../components/SectionHeading'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 import { mdxComponents } from '../mdx/components'
 import '../prose.css'
 import { site } from '../site'
@@ -11,7 +11,7 @@ const linkClass = 'font-bold underline decoration-2 underline-offset-4'
 
 /** /about (spec §5.4): short and human. Bio from src/content/about.mdx, the rest from site.ts. */
 export function About() {
-  useDocumentTitle('About')
+  usePageMeta({ title: 'About', description: site.description, path: '/about' })
   const { links } = site
 
   return (

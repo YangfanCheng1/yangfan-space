@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Card } from '@/components/ui'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 
 export function NotFound() {
-  useDocumentTitle('Not found')
+  const { pathname } = useLocation()
+  usePageMeta({ title: 'Not found', description: 'This page does not exist.', path: pathname, noindex: true })
   return (
     <Card className="mx-auto mt-8 max-w-lg p-8 text-center">
       <p aria-hidden className="font-display text-7xl">

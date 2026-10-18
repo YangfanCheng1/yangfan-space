@@ -5,11 +5,12 @@ import { Badge } from '@/components/ui'
 import { adjacentPosts } from '@/content/postUtils'
 import { getPost, loadPostBody, posts } from '@/content/posts'
 import type { PostMeta } from '@/content/schema'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 import { formatDate, formatReading } from '../lib/format'
 import { mdxComponents } from '../mdx/components'
 import '../prose.css'
 import { NotFound } from './NotFound'
+import { postKey, usePreloaded } from '../preload'
 
 function Neighbour({ post, dir }: { post: PostMeta; dir: 'newer' | 'older' }) {
   return (
@@ -29,12 +30,14 @@ export function Post() {
   const { slug = '' } = useParams()
   const { hash } = useLocation()
   const meta = getPost(slug)
-  const [body, setBody] = useState<{ slug: string; Content: MDXContent } | null>(null)
+  const preloaded = usePreloaded(postKey(slug))
+  const [body, setBody] = useState<{ slug: string; Content: MDXContent } | null>(preloaded ? { slug, Content: preloaded } : null)
 
-  useDocumentTitle(meta?.title ?? 'Not found')
+  usePageMeta(meta ? { title: meta.title, description: meta.summary, path: `/blog/${meta.slug}`, type: 'article', publishedTime: meta.date } : null)
 
+  const haveBody = body?.slug === slug
   useEffect(() => {
-    if (!meta) return
+    if (!meta || haveBody) return
     let cancelled = false
     loadPostBody(slug).then((Content) => {
       if (!cancelled) setBody({ slug, Content })
@@ -42,7 +45,7 @@ export function Post() {
     return () => {
       cancelled = true
     }
-  }, [slug, meta])
+  }, [slug, meta, haveBody])
 
   const Content = body?.slug === slug ? body.Content : null
 

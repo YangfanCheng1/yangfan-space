@@ -3,6 +3,7 @@ import { Badge, Button } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import { useSettingsStore } from '@/store/useSettingsStore'
 import { site } from '../site'
+import { useHydrated } from '../hooks/useHydrated'
 import { ScrollToTop } from './ScrollToTop'
 
 const nav = [
@@ -13,7 +14,9 @@ const nav = [
 ]
 
 export function SiteLayout() {
-  const soundOn = useSettingsStore((s) => s.soundOn)
+  const hydrated = useHydrated()
+  // The saved preference only exists in the browser; render the default until hydrated.
+  const soundOn = useSettingsStore((s) => s.soundOn) || !hydrated
   const toggleSound = useSettingsStore((s) => s.toggleSound)
 
   return (

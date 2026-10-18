@@ -6,11 +6,11 @@ import { PostList } from '../components/PostList'
 import { Placeholder } from '../components/Placeholder'
 import { ProjectCard } from '../components/ProjectCard'
 import { SectionHeading } from '../components/SectionHeading'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 import { site } from '../site'
 
 export function Home() {
-  useDocumentTitle()
+  usePageMeta({ description: site.intro ?? site.description, path: '/' })
 
   return (
     <>

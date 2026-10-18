@@ -6,6 +6,8 @@
  */
 export interface SiteConfig {
   name: string
+  /** Default description for search results and link previews. */
+  description: string
   owner: string
   role: string
   /** Existing, longer professional page. */
@@ -28,6 +30,7 @@ export interface SiteConfig {
 
 export const site: SiteConfig = {
   name: "Yangfan's Space",
+  description: 'Projects and writing by Yangfan, a software engineer at Meta.',
   owner: 'Yangfan',
   role: 'Software engineer at Meta',
   aboutPage: 'https://yangfancheng1.github.io/about/',

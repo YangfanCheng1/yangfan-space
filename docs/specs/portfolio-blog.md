@@ -152,7 +152,15 @@ order: 1
 - **Pre-rendering** (decision Q3). Today the server sends an empty page and JavaScript draws everything in the visitor's browser. Link-preview bots (Slack, LinkedIn, iMessage) and many search crawlers don't run that JavaScript, so a shared post shows up blank.
   - Pre-rendering runs each portfolio page once at build time and saves the finished HTML, with the right `<title>`, description and Open Graph image baked in. Visitors still get the same interactive React site once JavaScript loads.
   - This applies to home, projects, blog and about. The apps (e.g. `/personal-finance`) stay client-only, because they're per-visitor and private.
-  - Tool: `vite-react-ssg`, or a small custom script if it fights the existing router.
+  - As built (P5), with a small custom pre-renderer rather than a framework:
+    - `npm run build` runs the client build, then `vite build --ssr src/entry-server.tsx`, then `build/prerender.ts`.
+    - Each route is rendered with StaticRouter and written to `dist/<route>/index.html`, its tags filled from `usePageMeta()`.
+    - Also written: `dist/app-shell.html` (the empty shell for client-only app routes), `404.html` (noindex), `sitemap.xml`, `robots.txt`, and a default 1200×630 preview image, `public/og-default.png`.
+  - Hydration rules:
+    - The browser hydrates only when `#root[data-prerendered]` matches the current path and there's no query string, because `?tag=` changes what the page shows. Anything else starts fresh, so React never adopts another page's markup.
+    - MDX bodies for the current URL are preloaded on both sides, so the article is in the HTML.
+    - Browser-only parts (embedded demos, the saved SFX preference) render after hydration.
+  - `vite preview` mirrors production routing (`/x` → `x/index.html`, otherwise `app-shell.html`) via `build/previewRoutes.ts`. P6's nginx does the same with `try_files $uri $uri/index.html /app-shell.html`.
 - **RSS** is generated in the same build step (`build/rssPlugin.ts`) and served at `/rss.xml` in dev. Drafts are never included. Feed links need an absolute origin from the `SITE_URL` environment variable, set at deploy time (P6); without it the build warns and uses localhost.
 - **Hosting** (decision Q5) follows `lgp-tax-wealth`: Google Cloud Run.
   - A Dockerfile builds the site, then serves `dist/` with nginx. Pre-rendered pages are served as-is; unknown paths fall back to `index.html` so app routes work. Assets get long cache headers.

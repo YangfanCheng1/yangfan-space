@@ -5,14 +5,18 @@ import { plannedProjects, projects } from '@/content/projects'
 import { ProjectCard } from '../components/ProjectCard'
 import { SectionHeading } from '../components/SectionHeading'
 import { TagFilter } from '../components/TagFilter'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 
 /** /projects (spec PR1–PR2), with a ?tag= filter, plus the "On the workbench" list. */
 export function Projects() {
   const [params] = useSearchParams()
   const tag = params.get('tag')
   const shown = filterByTag(projects, tag)
-  useDocumentTitle(tag ? `Projects tagged #${tag}` : 'Projects')
+  usePageMeta({
+    title: tag ? `Projects tagged #${tag}` : 'Projects',
+    description: 'Things Yangfan has built that run in the browser, each with the story of how it was made.',
+    path: '/projects',
+  })
 
   return (
     <>

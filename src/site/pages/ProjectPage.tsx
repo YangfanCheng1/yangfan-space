@@ -5,22 +5,25 @@ import { Badge, ButtonLink } from '@/components/ui'
 import { buttonClasses } from '@/components/ui/buttonClasses'
 import { getProject, loadProjectBody } from '@/content/projects'
 import { statusLabel } from '../lib/labels'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { usePageMeta } from '../seo/usePageMeta'
 import { mdxComponents } from '../mdx/components'
 import '../prose.css'
 import { NotFound } from './NotFound'
+import { projectKey, usePreloaded } from '../preload'
 
 /** /projects/:slug — the case study (spec PR3). */
 export function ProjectPage() {
   const { slug = '' } = useParams()
   const { hash } = useLocation()
   const project = getProject(slug)
-  const [body, setBody] = useState<{ slug: string; Content: MDXContent } | null>(null)
+  const preloaded = usePreloaded(projectKey(slug))
+  const [body, setBody] = useState<{ slug: string; Content: MDXContent } | null>(preloaded ? { slug, Content: preloaded } : null)
 
-  useDocumentTitle(project?.title ?? 'Not found')
+  usePageMeta(project ? { title: project.title, description: project.summary, path: `/projects/${project.slug}` } : null)
 
+  const haveBody = body?.slug === slug
   useEffect(() => {
-    if (!project) return
+    if (!project || haveBody) return
     let cancelled = false
     loadProjectBody(slug).then((Content) => {
       if (!cancelled) setBody({ slug, Content })
@@ -28,7 +31,7 @@ export function ProjectPage() {
     return () => {
       cancelled = true
     }
-  }, [slug, project])
+  }, [slug, project, haveBody])
 
   const Content = body?.slug === slug ? body.Content : null
   useEffect(() => {
