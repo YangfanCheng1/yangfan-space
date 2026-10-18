@@ -33,8 +33,8 @@ describe('remarkContentMeta (build-time)', () => {
     await expect(run('---\ntitle: [unclosed\n---\nBody')).rejects.toThrow(/isn't valid YAML/)
   })
 
-  it('leaves non-post MDX alone', async () => {
-    const file = await run('# Just MDX', '/repo/src/content/projects/x.mdx')
+  it('leaves MDX outside the content folders alone', async () => {
+    const file = await run('# Just MDX', '/repo/docs/notes/x.mdx')
     expect(file.data.meta).toBeUndefined()
   })
 })
@@ -61,5 +61,18 @@ describe('drafts in production builds', () => {
     } finally {
       process.env.NODE_ENV = prev
     }
+  })
+})
+
+describe('projects', () => {
+  it('validates project front matter and derives the slug', async () => {
+    const file = await run('---\ntitle: P\ntagline: T\nsummary: S.\nyear: 2026\nrole: Solo\nstatus: planned\n---\n', '/repo/src/content/projects/my-app.mdx')
+    expect(file.data.meta).toMatchObject({ title: 'P', status: 'planned', slug: 'my-app', featured: false, order: 100 })
+  })
+
+  it('fails the build on an invalid project', async () => {
+    await expect(run('---\ntitle: P\ntagline: T\nsummary: S.\nyear: 2026\nrole: Solo\nstatus: live\n---\n', '/repo/src/content/projects/my-app.mdx')).rejects.toThrow(
+      /src\/content\/projects\/my-app\.mdx: a "live" project needs a "live" link/,
+    )
   })
 })

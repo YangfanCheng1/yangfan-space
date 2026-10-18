@@ -2,12 +2,10 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Card } from '@/components/ui'
 import { filterByTag, tagCounts } from '@/content/postUtils'
 import { posts } from '@/content/posts'
-import { cn } from '@/lib/cn'
 import { PostList } from '../components/PostList'
 import { SectionHeading } from '../components/SectionHeading'
+import { TagFilter } from '../components/TagFilter'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-
-const chip = 'ink-border inline-block px-3 py-1.5 font-mono text-xs font-bold uppercase'
 
 /** /blog, with a tag filter kept in the URL (?tag=react) so it can be shared (spec BL1). */
 export function Blog() {
@@ -25,28 +23,7 @@ export function Blog() {
       </SectionHeading>
       <p className="mb-6 max-w-prose text-base sm:text-lg">Notes on building things: what worked, what didn&apos;t, and what I&apos;d change.</p>
 
-      {tags.length > 0 && (
-        <nav aria-label="Filter by tag" className="mb-8">
-          <ul className="flex flex-wrap gap-2">
-            <li>
-              <Link to="/blog" aria-current={!tag ? 'page' : undefined} className={cn(chip, !tag ? 'shadow-pop-sm bg-ink text-paper' : 'bg-paper hover:bg-mustard/40')}>
-                All
-              </Link>
-            </li>
-            {tags.map(({ tag: t, count }) => (
-              <li key={t}>
-                <Link
-                  to={`/blog?tag=${encodeURIComponent(t)}`}
-                  aria-current={tag === t ? 'page' : undefined}
-                  className={cn(chip, tag === t ? 'shadow-pop-sm bg-ink text-paper' : 'bg-paper hover:bg-mustard/40')}
-                >
-                  #{t} <span className="font-normal">({count})</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+      <TagFilter basePath="/blog" tags={tags} active={tag} />
 
       {shown.length ? (
         <PostList posts={shown} />

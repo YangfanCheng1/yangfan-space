@@ -94,3 +94,99 @@ export function sortPosts<T extends Pick<PostMeta, 'date' | 'title'>>(posts: T[]
 export function visiblePosts<T extends Pick<PostMeta, 'draft'>>(posts: T[], isProduction: boolean): T[] {
   return isProduction ? posts.filter((p) => !p.draft) : posts
 }
+
+// ── Projects (spec §5.2, §6) ────────────────────────────────────────────────
+
+export type ProjectStatus = 'live' | 'wip' | 'planned'
+export type ProjectAccent = 'vermilion' | 'teal' | 'mustard'
+
+export interface ProjectFrontmatter {
+  title: string
+  tagline: string
+  /** One or two sentences for cards. */
+  summary: string
+  year: number
+  role: string
+  /** Free-form tech names, e.g. "React", "Tailwind CSS". */
+  stack: string[]
+  tags: string[]
+  status: ProjectStatus
+  /** Internal route ("/personal-finance") or full URL. */
+  live?: string
+  source?: string
+  featured: boolean
+  /** Lower comes first; ties fall back to newest year, then title. */
+  order: number
+  accent: ProjectAccent
+}
+
+export interface ProjectMeta extends ProjectFrontmatter {
+  slug: string
+  readingMinutes: number
+}
+
+const STATUSES: ProjectStatus[] = ['live', 'wip', 'planned']
+const ACCENTS: ProjectAccent[] = ['vermilion', 'teal', 'mustard']
+const URL_RE = /^https?:\/\/[^\s]+$/
+
+export function validateProject(data: unknown, file: string): ProjectFrontmatter {
+  if (!isObj(data)) throw new ContentError(file, 'missing front matter (--- title: … --- at the top).')
+  const known = new Set(['title', 'tagline', 'summary', 'year', 'role', 'stack', 'tags', 'status', 'live', 'source', 'featured', 'order', 'accent'])
+  for (const k of Object.keys(data)) if (!known.has(k)) throw new ContentError(file, `unknown front-matter field "${k}".`)
+  const { title, tagline, summary, year, role, stack, tags, status, live, source, featured, order, accent } = data
+
+  const text = (v: unknown, field: string, max: number) => {
+    if (typeof v !== 'string' || !v.trim()) throw new ContentError(file, `"${field}" is required.`)
+    if (v.trim().length > max) throw new ContentError(file, `"${field}" should be under ${max} characters.`)
+    return v.trim()
+  }
+  const out: ProjectFrontmatter = {
+    title: text(title, 'title', 80),
+    tagline: text(tagline, 'tagline', 80),
+    summary: text(summary, 'summary', 200),
+    year: 0,
+    role: text(role, 'role', 80),
+    stack: [],
+    tags: [],
+    status: 'live',
+    featured: featured === true,
+    order: 100,
+    accent: 'teal',
+  }
+
+  if (typeof year !== 'number' || !Number.isInteger(year) || year < 2000 || year > 2100) throw new ContentError(file, '"year" must be a year like 2026.')
+  out.year = year
+  if (stack !== undefined && (!Array.isArray(stack) || !stack.every((s) => typeof s === 'string' && s.trim())))
+    throw new ContentError(file, '"stack" must be a list of names, e.g. [React, TypeScript].')
+  out.stack = ((stack as string[] | undefined) ?? []).map((s) => s.trim())
+  if (tags !== undefined && (!Array.isArray(tags) || !tags.every((t) => typeof t === 'string' && SLUG_RE.test(t))))
+    throw new ContentError(file, '"tags" must be a list of lowercase-hyphenated words, e.g. [react, data-viz].')
+  out.tags = (tags as string[] | undefined) ?? []
+  if (!STATUSES.includes(status as ProjectStatus)) throw new ContentError(file, `"status" must be one of ${STATUSES.join(', ')}.`)
+  out.status = status as ProjectStatus
+
+  if (live !== undefined) {
+    if (typeof live !== 'string' || !(live.startsWith('/') || URL_RE.test(live))) throw new ContentError(file, '"live" must be a site path like /personal-finance or a full URL.')
+    out.live = live
+  }
+  if (out.status === 'live' && !out.live) throw new ContentError(file, 'a "live" project needs a "live" link.')
+  if (source !== undefined) {
+    if (typeof source !== 'string' || !URL_RE.test(source)) throw new ContentError(file, '"source" must be a full URL.')
+    out.source = source
+  }
+  if (featured !== undefined && typeof featured !== 'boolean') throw new ContentError(file, '"featured" must be true or false.')
+  if (order !== undefined) {
+    if (typeof order !== 'number' || !Number.isFinite(order)) throw new ContentError(file, '"order" must be a number.')
+    out.order = order
+  }
+  if (accent !== undefined) {
+    if (!ACCENTS.includes(accent as ProjectAccent)) throw new ContentError(file, `"accent" must be one of ${ACCENTS.join(', ')}.`)
+    out.accent = accent as ProjectAccent
+  }
+  return out
+}
+
+/** By `order`, then newest year, then title. */
+export function sortProjects<T extends Pick<ProjectMeta, 'order' | 'year' | 'title'>>(projects: T[]): T[] {
+  return [...projects].sort((a, b) => a.order - b.order || b.year - a.year || a.title.localeCompare(b.title))
+}

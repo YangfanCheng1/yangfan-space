@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { builtApps, plannedApps } from '@/apps/registry'
 import { ButtonLink, Card } from '@/components/ui'
 import { posts } from '@/content/posts'
+import { featuredProjects, plannedProjects, projects } from '@/content/projects'
 import { PostList } from '../components/PostList'
 import { Placeholder } from '../components/Placeholder'
 import { ProjectCard } from '../components/ProjectCard'
@@ -54,7 +54,7 @@ export function Home() {
             <div>
               <dt className="font-mono text-xs uppercase opacity-90">Recently shipped</dt>
               <dd className="font-display text-xl leading-tight uppercase">
-                <Link to="/personal-finance" className="underline decoration-2 underline-offset-4">
+                <Link to="/projects/personal-finance" className="underline decoration-2 underline-offset-4">
                   Personal Finance
                 </Link>
               </dd>
@@ -63,8 +63,8 @@ export function Home() {
           </div>
           <dl className="grid grid-cols-3 gap-3 border-t-2 border-dashed border-paper/60 pt-4">
             {[
-              [builtApps.length, 'Live'],
-              [plannedApps.length, 'On the bench'],
+              [projects.filter((p) => p.status === 'live').length, 'Live'],
+              [plannedProjects.length, 'On the bench'],
               [posts.length, 'Posts'],
             ].map(([n, label]) => (
               <div key={label} className="flex flex-col-reverse">
@@ -82,8 +82,8 @@ export function Home() {
           <span id="featured">Featured projects</span>
         </SectionHeading>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {builtApps.slice(0, 3).map((app) => (
-            <ProjectCard key={app.slug} app={app} />
+          {featuredProjects.slice(0, 3).map((p) => (
+            <ProjectCard key={p.slug} project={p} />
           ))}
         </div>
       </section>

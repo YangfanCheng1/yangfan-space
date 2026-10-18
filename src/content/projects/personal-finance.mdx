@@ -1,0 +1,52 @@
+---
+title: Personal Finance
+tagline: Count it. Then plan the exit.
+summary: A net worth tracker and FIRE projection that runs entirely in the browser. No account, and nothing leaves the device.
+year: 2026
+role: Solo project
+stack: [React, TypeScript, Vite, Tailwind CSS, Zustand, Recharts, Vitest]
+tags: [react, finance, data-viz, accessibility]
+status: live
+live: /personal-finance
+featured: true
+order: 1
+accent: teal
+---
+
+<Callout kind="warning" title="Draft — to rewrite in my own voice">
+  Claude drafted this from the project's spec, decisions log and test results. Every number here is real, but the wording isn't mine yet. Edit it, then delete this box.
+</Callout>
+
+## The problem
+
+I wanted two answers about my own money: *where do I stand?* and *when could work become optional?* Most tools that answer them want an account, a bank connection, or both. I wanted something private by design: no sign-up, no server, numbers that never leave the browser.
+
+## Approach
+
+I wrote a short spec before any code, covering goals, non-goals, every formula and a decisions log, and then built in six milestones. Each milestone had to pass its tests and a check in a real browser, at desktop and phone width, before the next one started.
+
+- **The math first, with no UI.** The FIRE engine and net worth math are pure functions. Money is stored in integer cents, so totals never drift. Years to FI is solved exactly (closed form, cross-checked by bisection) rather than stepped year by year.
+- **Two tools, done thoroughly.**
+  - *Net Worth*: accounts, category breakdown, liquid and invested totals, and monthly snapshots.
+  - *FIRE*: FI number, years and age, Lean, Fat, Coast and Barista variants, a "what if" grid, and whether the money lasts after you retire.
+- **Private by default.** Everything lives in the browser's local storage. Export, import and delete-all are one click each, and imported backups are validated field by field before anything changes.
+
+<Demo name="fire-projection" />
+
+## What was hard
+
+- **Colors that work for everyone.** My first chart palette put green (assets) next to clay (debts). A color-vision check showed the pair is nearly indistinguishable for red-green colorblindness. The breakdown became two labeled panels, so color is never the only cue.
+- **Bugs a passing build doesn't show.** Screen-reader-only text inside a scrolling table quietly stretched the phone layout to 583px. A browser with storage blocked crashed the whole app instead of carrying on in memory. Both were found by testing in a real browser, not by the compiler.
+- **Defining "Coast FIRE" precisely.** "The age you can stop contributing" and "the age you'd reach FI if you stopped today" sound alike but differ. Writing the math down first made the gap obvious.
+
+## Results
+
+- **204** unit tests. Every formula in the spec has a reference case worked out by hand.
+- **134** automated browser checks across the FIRE, Net Worth and data-management flows.
+- **0** accessibility violations from an automated WCAG 2.2 audit, at desktop and phone width, plus a fix so the phone's sticky summary bar never hides the field you're typing in.
+
+## What I'd do next
+
+- A nominal-returns-plus-inflation mode, alongside today's real returns.
+- Monte Carlo or historical sequences, to show a *range* rather than one smooth line.
+- Saved scenarios, to compare "retire at 50" with "retire at 55" side by side.
