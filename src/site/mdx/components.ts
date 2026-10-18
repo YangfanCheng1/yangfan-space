@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
+import { Placeholder } from '../components/Placeholder'
 import { Callout } from './Callout'
 import { Demo } from './Demo'
 import { Figure } from './Figure'
@@ -13,5 +14,6 @@ export const mdxComponents: MDXComponents = {
   h2: H2,
   h3: H3,
   h4: H4,
+  Placeholder,
   pre: Pre,
 }

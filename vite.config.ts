@@ -10,6 +10,7 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import { defineConfig } from 'vite'
+import { contentCheck } from './build/contentCheck.ts'
 import { mdxMeta } from './build/mdxMeta.ts'
 import { remarkContentMeta } from './build/remarkContentMeta.ts'
 import { rssPlugin } from './build/rssPlugin.ts'
@@ -41,6 +42,10 @@ export default defineConfig({
       metaOptions,
       title: "Yangfan's Space",
       description: 'Notes on building things, and the projects that came out of them.',
+    }),
+    contentCheck({
+      contentDir: fileURLToPath(new URL('./src/content', import.meta.url)),
+      root: fileURLToPath(new URL('.', import.meta.url)),
     }),
   ],
   resolve: {

@@ -26,8 +26,8 @@ export function Home() {
           <p className="mt-6 max-w-prose text-base sm:text-lg">
             This is my space for the things I build outside work, and for writing about how they came together.
           </p>
-          <div className="mt-4 max-w-prose text-base">
-            <Placeholder>Two or three sentences about you: what you work on, what you&apos;re curious about.</Placeholder>
+          <div className="mt-4 max-w-prose text-base sm:text-lg">
+            {site.intro ? <p>{site.intro}</p> : <Placeholder>Two or three sentences about you: what you work on, what you&apos;re curious about.</Placeholder>}
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
             <ButtonLink to="/projects" size="lg">
@@ -45,21 +45,23 @@ export function Home() {
           style={{ ['--halftone' as string]: 'rgb(248 246 240 / 0.16)' }}
         >
           <div className="flex flex-col gap-5">
-          <p className="font-mono text-xs font-bold tracking-widest uppercase">Now</p>
-          <dl className="flex flex-col gap-4">
-            <div>
-              <dt className="font-mono text-xs uppercase opacity-90">Building</dt>
-              <dd className="font-display text-xl leading-tight uppercase">This site: a portfolio + blog</dd>
-            </div>
-            <div>
-              <dt className="font-mono text-xs uppercase opacity-90">Recently shipped</dt>
-              <dd className="font-display text-xl leading-tight uppercase">
-                <Link to="/projects/personal-finance" className="underline decoration-2 underline-offset-4">
-                  Personal Finance
-                </Link>
-              </dd>
-            </div>
-          </dl>
+            <p className="font-mono text-xs font-bold tracking-widest uppercase">Now</p>
+            <dl className="flex flex-col gap-4">
+              <div>
+                <dt className="font-mono text-xs uppercase opacity-90">Building</dt>
+                <dd className="font-display text-xl leading-tight uppercase">{site.now.building}</dd>
+              </div>
+              {site.now.shipped && (
+                <div>
+                  <dt className="font-mono text-xs uppercase opacity-90">Recently shipped</dt>
+                  <dd className="font-display text-xl leading-tight uppercase">
+                    <Link to={site.now.shipped.href} className="underline decoration-2 underline-offset-4">
+                      {site.now.shipped.label}
+                    </Link>
+                  </dd>
+                </div>
+              )}
+            </dl>
           </div>
           <dl className="grid grid-cols-3 gap-3 border-t-2 border-dashed border-paper/60 pt-4">
             {[

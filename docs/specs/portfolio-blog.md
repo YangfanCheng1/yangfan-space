@@ -92,6 +92,7 @@ This is a personal site, not a job-hunting page, so About is short and human.
 - **AB2.** "Things I like working with": a short plain-text list, not skill bars.
 - **AB3.** Links: email, GitHub and others, as placeholders until provided. It also links to your existing page, https://yangfancheng1.github.io/about/, for the longer professional version.
 - **AB4.** No experience timeline or résumé in v1.
+- **Where to edit (P4).** Short personal facts live in `src/site/site.ts`: intro, the "Now" panel, interests, photo and links. The longer bio lives in `src/content/about.mdx`. Anything unset shows as a dashed **"To write:"** placeholder, and every `npm run build` prints what is still missing.
 
 ## 6. Content model
 
