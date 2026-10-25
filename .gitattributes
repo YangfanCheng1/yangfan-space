@@ -1,0 +1,4 @@
+# Files that run or are read inside Linux (bash, Docker, nginx) keep Unix line endings.
+*.sh text eol=lf
+Dockerfile text eol=lf
+deploy/*.conf text eol=lf
