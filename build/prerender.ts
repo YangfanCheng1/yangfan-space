@@ -10,14 +10,17 @@
  *                             routes such as /personal-finance (see P6 nginx)
  *   dist/404.html             a pre-rendered "not found" page
  *   dist/sitemap.xml, dist/robots.txt
+ *   dist-nginx/app-routes.conf  nginx locations for client-only apps (P6)
+ *   dist-nginx/app-slugs.json   the same list, for `vite preview` (build/previewRoutes.ts)
  */
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { injectPage, outputPath, robotsTxt, sitemapXml } from './prerenderHtml.ts'
+import { injectPage, nginxAppRoutes, outputPath, robotsTxt, sitemapXml } from './prerenderHtml.ts'
 
 type Server = {
   prerenderRoutes(): string[]
+  appSlugs(): string[]
   render(url: string, siteUrl: string): Promise<{ html: string; head: string }>
 }
 
@@ -45,6 +48,9 @@ const notFound = await server.render('/404', siteUrl)
 await writeFile(join(dist, '404.html'), injectPage(template, { url: '/404', ...notFound }))
 await writeFile(join(dist, 'sitemap.xml'), sitemapXml(siteUrl, routes))
 await writeFile(join(dist, 'robots.txt'), robotsTxt(siteUrl))
+await mkdir(resolve('dist-nginx'), { recursive: true })
+await writeFile(resolve('dist-nginx/app-routes.conf'), nginxAppRoutes(server.appSlugs()))
+await writeFile(resolve('dist-nginx/app-slugs.json'), JSON.stringify(server.appSlugs()))
 
 console.log(`✓ pre-rendered ${routes.length} pages (+ 404, app shell, sitemap.xml, robots.txt)`)
 for (const r of routes) console.log(`  ${r}`)

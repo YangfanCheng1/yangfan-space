@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { injectPage, outputPath, robotsTxt, sitemapXml } from './prerenderHtml.ts'
+import { injectPage, nginxAppRoutes, outputPath, robotsTxt, sitemapXml } from './prerenderHtml.ts'
 
 const template = `<html><head>
     <meta charset="UTF-8" />
@@ -48,4 +48,17 @@ describe('sitemap / robots', () => {
     expect(xml.match(/<url>/g)).toHaveLength(2)
   })
   it('robots points at the sitemap', () => expect(robotsTxt('https://example.com')).toContain('Sitemap: https://example.com/sitemap.xml'))
+})
+
+describe('nginxAppRoutes', () => {
+  it('one location per app, serving the app shell', () => {
+    const conf = nginxAppRoutes(['personal-finance', 'comic-reader'])
+    expect(conf).toContain('location ~ ^/personal-finance(/|$) {')
+    expect(conf).toContain('location ~ ^/comic-reader(/|$) {')
+    expect(conf.match(/try_files \$uri \/app-shell\.html;/g)).toHaveLength(2)
+  })
+  it('rejects slugs that could inject nginx config', () => {
+    expect(() => nginxAppRoutes(['ok', 'bad; }'])).toThrow(/unsafe app slug/)
+  })
+  it('no apps → just the header comment', () => expect(nginxAppRoutes([])).toMatch(/^# Generated/))
 })

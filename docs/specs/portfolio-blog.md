@@ -160,7 +160,7 @@ order: 1
     - The browser hydrates only when `#root[data-prerendered]` matches the current path and there's no query string, because `?tag=` changes what the page shows. Anything else starts fresh, so React never adopts another page's markup.
     - MDX bodies for the current URL are preloaded on both sides, so the article is in the HTML.
     - Browser-only parts (embedded demos, the saved SFX preference) render after hydration.
-  - `vite preview` mirrors production routing (`/x` → `x/index.html`, otherwise `app-shell.html`) via `build/previewRoutes.ts`. P6's nginx does the same with `try_files $uri $uri/index.html /app-shell.html`.
+  - `vite preview` mirrors production routing (`/x` → `x/index.html`, otherwise `app-shell.html`) via `build/previewRoutes.ts`. As built (P6), nginx (`deploy/nginx.conf`) uses `try_files $uri $uri/index.html =404`, sends app routes to `app-shell.html` through locations generated from the registry (`dist-nginx/app-routes.conf`), and returns a real 404 status with `404.html` for anything else, including draft posts.
 - **RSS** is generated in the same build step (`build/rssPlugin.ts`) and served at `/rss.xml` in dev. Drafts are never included. Feed links need an absolute origin from the `SITE_URL` environment variable, set at deploy time (P6); without it the build warns and uses localhost.
 - **Hosting** (decision Q5) follows `lgp-tax-wealth`: Google Cloud Run.
   - A Dockerfile builds the site, then serves `dist/` with nginx. Pre-rendered pages are served as-is; unknown paths fall back to `index.html` so app routes work. Assets get long cache headers.

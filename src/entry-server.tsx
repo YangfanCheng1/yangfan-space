@@ -1,5 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
+import { apps } from './apps/registry'
 import { AppRoutes } from './AppRoutes'
 import { posts } from './content/posts'
 import { projects } from './content/projects'
@@ -14,6 +15,11 @@ import { PreloadContext, preloadForPath } from './site/preload'
  */
 export function prerenderRoutes(): string[] {
   return ['/', '/projects', '/blog', '/about', ...projects.map((p) => `/projects/${p.slug}`), ...posts.map((p) => `/blog/${p.slug}`)]
+}
+
+/** Client-only app paths (never pre-rendered); nginx serves them the empty app shell. */
+export function appSlugs(): string[] {
+  return apps.map((a) => a.slug)
 }
 
 export async function render(url: string, siteUrl: string): Promise<{ html: string; head: string; meta: PageMeta }> {
