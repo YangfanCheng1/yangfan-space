@@ -18,7 +18,7 @@ describe('formatReport', () => {
     const r = formatReport({ required: ['Email (site.links.email)'], optional: ['Photo (site.photo)'] }, [{ file: 'src/content/about.mdx', count: 2 }])
     expect(r).toBe(
       [
-        'Content still to write (shows as "To write:" on the site):',
+        'Content still to write (shows as "To write:" in npm run dev; hidden on the live site):',
         '  • Email (site.links.email)',
         '  • 2 placeholders in src/content/about.mdx',
         'Optional, not set: Photo (site.photo)',

@@ -19,7 +19,7 @@ export async function placeholdersIn(dir: string, root: string): Promise<{ file:
 export function formatReport(missing: { required: string[]; optional: string[] }, placeholders: { file: string; count: number }[]): string {
   const lines: string[] = []
   if (missing.required.length || placeholders.length) {
-    lines.push('Content still to write (shows as "To write:" on the site):')
+    lines.push('Content still to write (shows as "To write:" in npm run dev; hidden on the live site):')
     for (const m of missing.required) lines.push(`  • ${m}`)
     for (const p of placeholders) lines.push(`  • ${p.count} placeholder${p.count === 1 ? '' : 's'} in ${p.file}`)
   }

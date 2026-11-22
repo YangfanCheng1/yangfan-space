@@ -3,7 +3,7 @@ import { ButtonLink, Card } from '@/components/ui'
 import { posts } from '@/content/posts'
 import { featuredProjects, plannedProjects, projects } from '@/content/projects'
 import { PostList } from '../components/PostList'
-import { Placeholder } from '../components/Placeholder'
+import { Placeholder, showPlaceholders } from '../components/Placeholder'
 import { ProjectCard } from '../components/ProjectCard'
 import { SectionHeading } from '../components/SectionHeading'
 import { usePageMeta } from '../seo/usePageMeta'
@@ -26,9 +26,11 @@ export function Home() {
           <p className="mt-6 max-w-prose text-base sm:text-lg">
             This is my space for the things I build outside work, and for writing about how they came together.
           </p>
-          <div className="mt-4 max-w-prose text-base sm:text-lg">
-            {site.intro ? <p>{site.intro}</p> : <Placeholder>Two or three sentences about you: what you work on, what you&apos;re curious about.</Placeholder>}
-          </div>
+          {(site.intro || showPlaceholders) && (
+            <div className="mt-4 max-w-prose text-base sm:text-lg">
+              {site.intro ? <p>{site.intro}</p> : <Placeholder>Two or three sentences about you: what you work on, what you&apos;re curious about.</Placeholder>}
+            </div>
+          )}
           <div className="mt-8 flex flex-wrap gap-4">
             <ButtonLink to="/projects" size="lg">
               See projects
@@ -63,17 +65,22 @@ export function Home() {
               )}
             </dl>
           </div>
-          <dl className="grid grid-cols-3 gap-3 border-t-2 border-dashed border-paper/60 pt-4">
-            {[
-              [projects.filter((p) => p.status === 'live').length, 'Live'],
-              [plannedProjects.length, 'On the bench'],
-              [posts.length, 'Posts'],
-            ].map(([n, label]) => (
-              <div key={label} className="flex flex-col-reverse">
-                <dt className="mt-1 font-mono text-[11px] uppercase">{label}</dt>
-                <dd className="font-display text-4xl leading-none">{n}</dd>
-              </div>
-            ))}
+          <dl className="grid auto-cols-fr grid-flow-col gap-3 border-t-2 border-dashed border-paper/60 pt-4">
+            {(
+              [
+                [projects.filter((p) => p.status === 'live').length, 'Live'],
+                [plannedProjects.length, 'On the bench'],
+                [posts.length, 'Posts'],
+              ] as const
+            )
+              // A zero reads as "nothing here"; show a count once there's something to count.
+              .filter(([n]) => n > 0)
+              .map(([n, label]) => (
+                <div key={label} className="flex flex-col-reverse">
+                  <dt className="mt-1 font-mono text-[11px] uppercase">{label}</dt>
+                  <dd className="font-display text-4xl leading-none">{n}</dd>
+                </div>
+              ))}
           </dl>
         </Card>
       </section>

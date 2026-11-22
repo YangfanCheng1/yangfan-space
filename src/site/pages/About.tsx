@@ -1,6 +1,6 @@
 import AboutBody from '@/content/about.mdx'
 import { Card } from '@/components/ui'
-import { Placeholder } from '../components/Placeholder'
+import { Placeholder, showPlaceholders } from '../components/Placeholder'
 import { SectionHeading } from '../components/SectionHeading'
 import { usePageMeta } from '../seo/usePageMeta'
 import { mdxComponents } from '../mdx/components'
@@ -32,30 +32,34 @@ export function About() {
         </Card>
 
         <div className="flex flex-col gap-6">
-          <Card className="p-6">
-            {site.photo ? (
-              <img src={site.photo.src} alt={site.photo.alt} className="ink-border aspect-square w-full object-cover" />
-            ) : (
-              <Placeholder block>A photo or avatar (optional): set site.photo and add the image to public/.</Placeholder>
-            )}
-          </Card>
+          {(site.photo || showPlaceholders) && (
+            <Card className="p-6">
+              {site.photo ? (
+                <img src={site.photo.src} alt={site.photo.alt} className="ink-border aspect-square w-full object-cover" />
+              ) : (
+                <Placeholder block>A photo or avatar (optional): set site.photo and add the image to public/.</Placeholder>
+              )}
+            </Card>
+          )}
 
-          <Card className="p-6">
-            <h2 className="font-display text-xl uppercase">Things I like working with</h2>
-            {site.interests?.length ? (
-              <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                {site.interests.map((i) => (
-                  <li key={i} className="before:mr-1.5 before:content-['▪']">
-                    {i}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="mt-3 text-sm">
-                <Placeholder>Languages, tools and topics you enjoy.</Placeholder>
-              </div>
-            )}
-          </Card>
+          {(site.interests?.length || showPlaceholders) && (
+            <Card className="p-6">
+              <h2 className="font-display text-xl uppercase">Things I like working with</h2>
+              {site.interests?.length ? (
+                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                  {site.interests.map((i) => (
+                    <li key={i} className="before:mr-1.5 before:content-['▪']">
+                      {i}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="mt-3 text-sm">
+                  <Placeholder>Languages, tools and topics you enjoy.</Placeholder>
+                </div>
+              )}
+            </Card>
+          )}
 
           <Card className="p-6">
             <h2 className="font-display text-xl uppercase">Find me</h2>
@@ -65,24 +69,28 @@ export function About() {
                   GitHub
                 </a>
               </li>
-              <li>
-                {links.email ? (
-                  <a href={`mailto:${links.email}`} className={linkClass}>
-                    Email
-                  </a>
-                ) : (
-                  <Placeholder>Email address</Placeholder>
-                )}
-              </li>
-              <li>
-                {links.linkedin ? (
-                  <a href={links.linkedin} className={linkClass}>
-                    LinkedIn
-                  </a>
-                ) : (
-                  <Placeholder>LinkedIn (optional)</Placeholder>
-                )}
-              </li>
+              {(links.email || showPlaceholders) && (
+                <li>
+                  {links.email ? (
+                    <a href={`mailto:${links.email}`} className={linkClass}>
+                      Email
+                    </a>
+                  ) : (
+                    <Placeholder>Email address</Placeholder>
+                  )}
+                </li>
+              )}
+              {(links.linkedin || showPlaceholders) && (
+                <li>
+                  {links.linkedin ? (
+                    <a href={links.linkedin} className={linkClass}>
+                      LinkedIn
+                    </a>
+                  ) : (
+                    <Placeholder>LinkedIn (optional)</Placeholder>
+                  )}
+                </li>
+              )}
               <li>
                 <a href="/rss.xml" className={linkClass}>
                   RSS feed
